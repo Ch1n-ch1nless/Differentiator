@@ -30,16 +30,14 @@ static Node* CopyNode(Node* node)
     return new_node;
 }
 
-#define NUM(value)                  NewNode(TYPE_NUMBER,    {value}, nullptr, nullptr)
-#define OPER(value, left, right)     NewNode(TYPE_OPERATION, {value}, left,    right  )
-
-#define dL DiffNode(node->left, index)
-#define dR DiffNode(node->right, index)
-#define cL CopyNode(node->left)  
-#define cR CopyNode(node->right) 
-
 Node* DiffNode(Node* node, const int index)
 {
+    #define DEF_OPER(number, name, string, priority, diff_action)                       \
+                case OPERATION_##name:                                                  \
+                {                                                                       \
+                    return diff_action;                                                 \
+                }
+
     if (node == nullptr)
     {
         return nullptr;
@@ -59,12 +57,6 @@ Node* DiffNode(Node* node, const int index)
 
         case TYPE_OPERATION:
         {    
-            #define DEF_OPER(number, name, string, priority, diff_action, ...)  \
-                case OPERATION_##name:                                          \
-                {                                                               \
-                    diff_action;                                         \
-                }
-
             switch (VALUE.oper_index)
             {
                 #include "../../DSL/operations.dsl"
@@ -75,6 +67,8 @@ Node* DiffNode(Node* node, const int index)
             }
         }
     }
+
+    #undef DEF_OPER
 }
 
 static void CopyVariables(NameTable* new_name_table, NameTable* name_table)

@@ -19,14 +19,14 @@ int main()
     TakeXDerivative(&differentiator, &derivative, "x");
 
     TreeGraphDump(&differentiator);
-    /*TreeGraphDump(&derivative);
+    TreeGraphDump(&derivative);
 
     FILE* tex_file = nullptr;
     error = OpenFile("tree.tex", &tex_file, "w");
     if (error != NO_ERR)
         return error;
 
-    PrintExpressionInTeX(tex_file, &differentiator, &derivative);*/
+    PrintExpressionInTeX(tex_file, &differentiator, &derivative);
 
     DifferentiatorDtor(&differentiator);
     DifferentiatorDtor(&derivative);
