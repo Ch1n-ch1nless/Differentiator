@@ -163,7 +163,7 @@ static Operations FindOperationInTable(char* string)
 
 //=================================================================================================
 
-static error_t IsArgumentNumber(char** cur_symbol, Argument* arg)
+static error_t IsArgumentNumber(char** cur_symbol, NodeData* arg)
 {
     PTR_ASSERT( cur_symbol)
     PTR_ASSERT(*cur_symbol)
@@ -171,16 +171,16 @@ static error_t IsArgumentNumber(char** cur_symbol, Argument* arg)
 
     error_t error = NO_ERR;
 
-    int number_of_symbols = 0;
-    int temp_value     = NAN;
+    int    number_of_symbols = 0;
+    double temp_value     = NAN;
 
     if (arg->type == TYPE_UNDEFINED)
     {
-        if (sscanf(*cur_symbol, "%d%n", &temp_value, &number_of_symbols) == 1)
+        if (sscanf(*cur_symbol, "%lg%n", &temp_value, &number_of_symbols) == 1)
         {
-            arg->type   = TYPE_NUMBER;
-            arg->value  = temp_value;
-            *cur_symbol = *cur_symbol + number_of_symbols;
+            arg->type            = TYPE_NUMBER;
+            arg->value.num_value = temp_value;
+            *cur_symbol          = *cur_symbol + number_of_symbols;
             return error;
         }
 
@@ -192,7 +192,7 @@ static error_t IsArgumentNumber(char** cur_symbol, Argument* arg)
 
 //=================================================================================================
 
-static error_t IsArgumentOperation(char** cur_symbol, Argument* arg)
+static error_t IsArgumentOperation(char** cur_symbol, NodeData* arg)
 {
     PTR_ASSERT( cur_symbol)
     PTR_ASSERT(*cur_symbol)
@@ -211,12 +211,11 @@ static error_t IsArgumentOperation(char** cur_symbol, Argument* arg)
 
             if (oper != OPERATION_UNDEFINED)
             {
-                arg->type  = TYPE_OPERATION;
-                arg->value = oper;
-                *cur_symbol = *cur_symbol + number_of_symbols;
+                arg->type             = TYPE_OPERATION;
+                arg->value.oper_index = oper;
+                *cur_symbol           = *cur_symbol + number_of_symbols;
             }
 
-            printf("\n[OPER] = %d | %d\n", oper, OPERATION_PLUS);
             return error;
         }
 
@@ -228,7 +227,7 @@ static error_t IsArgumentOperation(char** cur_symbol, Argument* arg)
 
 //=================================================================================================
 
-static error_t IsArgumentVariable(char** cur_symbol, Argument* arg, NameTable* name_table)
+static error_t IsArgumentVariable(char** cur_symbol, NodeData* arg, NameTable* name_table)
 {
     PTR_ASSERT( cur_symbol)
     PTR_ASSERT(*cur_symbol)
@@ -237,27 +236,28 @@ static error_t IsArgumentVariable(char** cur_symbol, Argument* arg, NameTable* n
 
     error_t error = NO_ERR;
 
-    int number_of_symbols                   = 0;
-    char* name_of_variable[MAX_LEN_OF_WORD] = {};
+    int number_of_symbols                  = 0;
+    char* name_of_variable = (char*) calloc(MAX_LEN_OF_WORD, sizeof(char));
 
     if (arg->type == TYPE_UNDEFINED)
     {
         if (sscanf(*cur_symbol, "%s%n", name_of_variable, &number_of_symbols) == 1)
         {
-            int number = FindVariableInNameTable(name_table, *name_of_variable, &error);
+            int index = FindVariableInNameTable(name_table, name_of_variable, &error);
 
             arg->type = TYPE_VARIABLE;
             *cur_symbol = *cur_symbol + number_of_symbols;
 
-            if (number != VARIABLE_WAS_NOT_FOUND)
+            if (index != VARIABLE_WAS_NOT_FOUND)
             {
-                arg->value = number;
+                arg->value.var_index = index;
                 return error;
             }
 
-            number = name_table->size;
-            error |= AddVariableToNameTable(name_table, *name_of_variable);
-            arg->value = number;
+            index = name_table->size;
+            error |= AddVariableToNameTable(name_table, name_of_variable);
+            arg->value.var_index = index;
+
             return error;
         }
 
@@ -269,22 +269,22 @@ static error_t IsArgumentVariable(char** cur_symbol, Argument* arg, NameTable* n
 
 //=================================================================================================
 
-static Argument* ReadArgument(char** const cur_symbol, error_t* const error, NameTable* name_table)
+static NodeData* ReadArgument(char** const cur_symbol, error_t* const error, NameTable* name_table)
 {
     PTR_ASSERT( cur_symbol)
     PTR_ASSERT(*cur_symbol)
     PTR_ASSERT(error)
     PTR_ASSERT(name_table)
 
-    Argument* arg = (Argument*) calloc(1, sizeof(Argument));
+    NodeData* arg = (NodeData*) calloc(1, sizeof(NodeData));
     if (arg == nullptr)
     {
         *error |= MEM_ALLOC_ERR;
         return nullptr;
     }
 
-    arg->type  = TYPE_UNDEFINED;
-    arg->value = NAN;
+    arg->type            = TYPE_UNDEFINED;
+    arg->value.num_value = NAN;
 
     *error |= IsArgumentNumber(cur_symbol, arg);
     *error |= IsArgumentOperation(cur_symbol, arg);
@@ -356,8 +356,6 @@ error_t ReadTreeFromBuffer(Differentiator* const differentiator)
         {
             node->data = ReadArgument(&cur_symbol, &error, &(differentiator->name_table));
         }
-
-        printf("%s\n=========================\n", cur_symbol);
     }
 
     return error;

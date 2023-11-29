@@ -15,17 +15,21 @@ int main()
 
     error = CreateBufferFromFile(&differentiator, "data_base.txt");
     error = ReadTreeFromBuffer(&differentiator);
+    
+    TakeXDerivative(&differentiator, &derivative, "x");
 
     TreeGraphDump(&differentiator);
-    
-    TakeXDerivative(&differentiator, &derivative);
+    /*TreeGraphDump(&derivative);
 
     FILE* tex_file = nullptr;
     error = OpenFile("tree.tex", &tex_file, "w");
     if (error != NO_ERR)
         return error;
 
-    PrintExpressionInTeX(tex_file, &differentiator, &derivative);
+    PrintExpressionInTeX(tex_file, &differentiator, &derivative);*/
+
+    DifferentiatorDtor(&differentiator);
+    DifferentiatorDtor(&derivative);
 
     return error;
 }

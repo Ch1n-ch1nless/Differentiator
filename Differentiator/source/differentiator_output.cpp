@@ -3,8 +3,8 @@
 #define ARRAY differentiator->name_table.array
 #define SIZE  differentiator->name_table.size
 #define TREE  differentiator->tree
-#define VALUE ((Argument*)node->data)->value
-#define TYPE  ((Argument*)node->data)->type
+#define VALUE ((NodeData*)node->data)->value
+#define TYPE  ((NodeData*)node->data)->type
 #define LEFT  node->left
 #define RIGHT node->right
 
@@ -21,21 +21,19 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
     switch (TYPE)
     {
         case TYPE_NUMBER:
-            fprintf(output, "%d", VALUE);
+            fprintf(output, "%lg", VALUE.num_value);
             break;
 
         case TYPE_VARIABLE:
         {
-            int index = VALUE;
+            int index = VALUE.var_index;
             fprintf(output, "%s", ARRAY[index]);
             break;
         }
 
         case TYPE_OPERATION:
         {
-            // dangerous
-            // 0x5 != 5.0
-            Operations oper = (Operations) VALUE;
+            Operations oper = (Operations) VALUE.oper_index;
 
             switch (oper)
             {
@@ -155,7 +153,7 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
                 case OPERATION_COS:
                 {
                     fprintf(output, "cos(");
-                    PrintNodeInTex(output, differentiator, RIGHT);
+                    PrintNodeInTex(output, differentiator, LEFT);
                     fprintf(output, ") ");
                     break;
                 }
@@ -163,7 +161,7 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
                 case OPERATION_CTG:
                 {
                     fprintf(output, "ctg(");
-                    PrintNodeInTex(output, differentiator, RIGHT);
+                    PrintNodeInTex(output, differentiator, LEFT);
                     fprintf(output, ") ");
                     break;
                 }
@@ -171,7 +169,7 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
                 case OPERATION_LN:
                 {
                     fprintf(output, "\\ln(");
-                    PrintNodeInTex(output, differentiator, RIGHT);
+                    PrintNodeInTex(output, differentiator, LEFT);
                     fprintf(output, ") ");
                     break;
                 }
@@ -179,7 +177,7 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
                 case OPERATION_SIN:
                 {
                     fprintf(output, "sin(");
-                    PrintNodeInTex(output, differentiator, RIGHT);
+                    PrintNodeInTex(output, differentiator, LEFT);
                     fprintf(output, ") ");
                     break;
                 }
@@ -187,7 +185,7 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
                 case OPERATION_SQRT:
                 {
                     fprintf(output, "\\sqrt{");
-                    PrintNodeInTex(output, differentiator, RIGHT);
+                    PrintNodeInTex(output, differentiator, LEFT);
                     fprintf(output, "} ");
                     break;
                 }
@@ -195,7 +193,7 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
                 case OPERATION_TG:
                 {
                     fprintf(output, "tg(");
-                    PrintNodeInTex(output, differentiator, RIGHT);
+                    PrintNodeInTex(output, differentiator, LEFT);
                     fprintf(output, ") ");
                     break;
                 }
@@ -275,17 +273,19 @@ static void NodeGraphDump(Node* node, FILE* dot_file, Differentiator* differenti
     {
         case TYPE_NUMBER:
         {
-            fprintf(dot_file, "%d | NUM | {<left> left | <right> right}}\", fillcolor = \"blue\"];\n", VALUE);
+            fprintf(dot_file, "%lg | NUM | {<left> left | <right> right}}\", fillcolor = \"blue\"];\n", VALUE.num_value);
             break;
         }
         case TYPE_VARIABLE:
         {
-            fprintf(dot_file, "%s | VAR | {<left> left | <right> right}}\", fillcolor = \"green\"];\n", ARRAY[(int)VALUE]);
+            fprintf(dot_file, "%s | VAR | {<left> left | <right> right}}\", fillcolor = \"green\"];\n", 
+                    differentiator->name_table.array[VALUE.var_index]);
             break;
         }
         case TYPE_OPERATION:
         {
-            fprintf(dot_file, "%s | OPER | {<left> left | <right> right}}\", fillcolor = \"red\"];\n", (OPERATION_TABLE[VALUE]).string);
+            fprintf(dot_file, "%s | OPER | {<left> left | <right> right}}\", fillcolor = \"red\"];\n", 
+                    OPERATION_TABLE[VALUE.oper_index].string);
             break;
         }
         case TYPE_UNDEFINED:

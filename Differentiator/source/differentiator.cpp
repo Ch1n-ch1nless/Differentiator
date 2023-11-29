@@ -98,13 +98,13 @@ error_t DifferentiatorDtor(Differentiator* differentiator)
 
 //=======================================================================================
 
-int FindVariableInNameTable(NameTable* name_table, const char* name, error_t* error)
+size_t FindVariableInNameTable(NameTable* name_table, const char* name, error_t* error)
 {
     PTR_ASSERT(name_table)
     PTR_ASSERT(name)
     PTR_ASSERT(error)
 
-    for (int i = 0; i < name_table->size; i++)
+    for (size_t i = 0; i < name_table->size; i++)
     {
         if (strcmp(name, name_table->array[i]) == 0)
         {
@@ -148,16 +148,17 @@ error_t AddVariableToNameTable(NameTable* name_table, const char* name_of_variab
 
 int GetPriority(Node* node)
 {
-    PTR_ASSERT(node)
+    if (node == nullptr)
+        return 4;
 
-    Argument* arg = (Argument*) node->data;
+    NodeData* arg = (NodeData*) node->data;
 
     if (arg->type != TYPE_OPERATION)
     {
         return 4;
     }
 
-    switch((int) arg->value)
+    switch((int) arg->value.oper_index)
     {
         #include "../../DSL/operations.dsl"
 

@@ -59,11 +59,17 @@ const OperationInfo OPERATION_TABLE[END_OF_OPERATION_ENUM] =
 
 #undef DEF_OPER
 
-// naming...
-struct Argument
+union Value
+{
+    double num_value;
+    size_t oper_index;
+    size_t var_index;
+};
+
+struct NodeData
 {
     Types  type  = TYPE_UNDEFINED;
-    int    value = -1;
+    Value  value;
 };
 
 const size_t NAME_TABLE_CAPACITY_INIT = 16;
@@ -74,7 +80,7 @@ const int    VARIABLE_WAS_NOT_FOUND   = -1;
 error_t DifferentiatorCtor(Differentiator* differentiator);
 error_t DifferentiatorDtor(Differentiator* differentiator);
 
-int     FindVariableInNameTable(NameTable* name_table, const char* name_of_variable, error_t* error);
+size_t  FindVariableInNameTable(NameTable* name_table, const char* name_of_variable, error_t* error);
 error_t AddVariableToNameTable( NameTable* name_table, const char* name_of_variable);
 
 int     GetPriority(Node* node);
