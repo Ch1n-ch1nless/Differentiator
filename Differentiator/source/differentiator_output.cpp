@@ -14,7 +14,7 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
 {
     PTR_ASSERT(output)
     PTR_ASSERT(differentiator)
-    PTR_ASSERT(node)  
+    PTR_ASSERT(node)
 
     int node_priority = GetPriority(node); 
 
@@ -253,7 +253,7 @@ void PrintExpressionInTeX(FILE* tex_file, Differentiator* differentiator, Differ
 
     DifferentiatorTextDump(tex_file, differentiator);
 
-    fprintf(tex_file, "Производная f'(x) = ");
+    fprintf(tex_file, "\\\\ Производная f'(x) = ");
 
     DifferentiatorTextDump(tex_file, derivative);
 
@@ -290,6 +290,7 @@ static void NodeGraphDump(Node* node, FILE* dot_file, Differentiator* differenti
         }
         case TYPE_UNDEFINED:
         default:
+            fprintf(dot_file, "}\"];\n");
             break;
     }
 

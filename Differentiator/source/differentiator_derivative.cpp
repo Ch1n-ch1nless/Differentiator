@@ -23,9 +23,10 @@ static Node* NewNode(Types type, Value value, Node* left, Node* right)
 
 static Node* CopyNode(Node* node)
 {
-    PTR_ASSERT(node)
+    if (node == nullptr)
+        return nullptr;
 
-    Node* new_node = NewNode(TYPE, VALUE, LEFT, RIGHT);
+    Node* new_node = NewNode(TYPE, VALUE, CopyNode(LEFT), CopyNode(RIGHT));
 
     return new_node;
 }

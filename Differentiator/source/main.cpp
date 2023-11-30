@@ -15,10 +15,15 @@ int main()
 
     error = CreateBufferFromFile(&differentiator, "data_base.txt");
     error = ReadTreeFromBuffer(&differentiator);
-    
-    TakeXDerivative(&differentiator, &derivative, "x");
+
+    //DifferentiatorOptimizate(&differentiator);
 
     TreeGraphDump(&differentiator);
+
+    TakeXDerivative(&differentiator, &derivative, "x");
+
+    DifferentiatorOptimizate(&derivative);
+
     TreeGraphDump(&derivative);
 
     FILE* tex_file = nullptr;

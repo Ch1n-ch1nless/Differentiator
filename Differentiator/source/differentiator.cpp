@@ -2,6 +2,24 @@
 
 //=======================================================================================
 
+bool IsZero(double number)
+{
+    if (fabs(number) < EPS)
+        return true;
+
+    return false;
+}
+
+bool IsOne( double number)
+{
+    if (fabs(number - 1.0) < EPS)
+        return true;
+
+    return false;
+}
+
+//=======================================================================================
+
 static error_t NameTableCtor(NameTable* name_table)
 {
     PTR_ASSERT(name_table)
@@ -200,6 +218,82 @@ Node* GetNodeFromStack(Stack* stk, Tree* tree, error_t* error)
     }
 
     return node;
+}
+
+//=======================================================================================
+
+double DifferentiatorCalculate(Node* node)
+{
+    if (node == nullptr)
+        return 0;
+
+    switch (((NodeData*)node->data)->type)
+    {
+        case TYPE_NUMBER:
+            return ((NodeData*)node->data)->value.num_value;
+
+        case TYPE_OPERATION:
+        {
+            double left  = DifferentiatorCalculate(node->left );
+            double right = DifferentiatorCalculate(node->right);
+
+            switch (((NodeData*)node->data)->value.oper_index)
+            {
+                case OPERATION_PLUS:
+                    return left + right;
+
+                case OPERATION_MINUS:
+                    return left - right;
+
+                case OPERATION_MUL:
+                    return left * right;
+
+                case OPERATION_DIV:
+                {
+                    if (IsZero(right))
+                    {
+                        assert(false && ("ERROR! The denominators of fractions are zero!!!\n"));
+                    }
+
+                    return left / right;
+                }
+
+                case OPERATION_POW:
+                    return pow(left, right);
+
+                case OPERATION_SIN:
+                    return sin(left);
+
+                case OPERATION_COS:
+                    return cos(left);
+
+                case OPERATION_TG:
+                    return tan(left);
+
+                case OPERATION_CTG:
+                    if (IsZero(right))
+                    {
+                        assert(false && ("ERROR! Ctg can not be calculated!!!\n"));
+                    }
+                    return 1 / tan(left);
+
+                case OPERATION_LN:
+                    return log(left);
+
+                case OPERATION_SQRT:
+                    return sqrt(left);
+                
+                default:
+                    break;
+            }
+            break;
+        }
+
+        case TYPE_VARIABLE:
+        case TYPE_UNDEFINED:
+        default:
+            return NAN;
+    }
 }
 
 //=======================================================================================

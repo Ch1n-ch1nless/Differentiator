@@ -75,7 +75,12 @@ struct NodeData
 const size_t NAME_TABLE_CAPACITY_INIT = 16;
 const int    VARIABLE_WAS_NOT_FOUND   = -1;
 
+const double EPS = 1e-6;
+
 //======================================================================================
+
+bool    IsZero(double number);
+bool    IsOne( double number);
 
 error_t DifferentiatorCtor(Differentiator* differentiator);
 error_t DifferentiatorDtor(Differentiator* differentiator);
@@ -86,5 +91,7 @@ error_t AddVariableToNameTable( NameTable* name_table, const char* name_of_varia
 int     GetPriority(Node* node);
 
 Node*   GetNodeFromStack(Stack* stk, Tree* tree, error_t* error);
+
+double  DifferentiatorCalculate(Node* node);
 
 #endif //DIFFERENTIATOR_H_INCLUDED
