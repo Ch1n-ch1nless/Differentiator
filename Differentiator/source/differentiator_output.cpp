@@ -10,7 +10,7 @@
 
 //=================================================================================================
 
-static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* node)
+static void PrintNodeInTeX(FILE* output, Differentiator* differentiator, Node* node)
 {
     PTR_ASSERT(output)
     PTR_ASSERT(differentiator)
@@ -40,9 +40,9 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
                 case OPERATION_DIV:
                 {
                     fprintf(output, " \\frac{");
-                    PrintNodeInTex(output, differentiator, LEFT );
+                    PrintNodeInTeX(output, differentiator, LEFT );
                     fprintf(output, "}{");
-                    PrintNodeInTex(output, differentiator, RIGHT);
+                    PrintNodeInTeX(output, differentiator, RIGHT);
                     fprintf(output, "} ");
                     break;
                 }
@@ -52,16 +52,16 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
                     if (node_priority > GetPriority(LEFT))
                     {
                         fprintf(output, "\\left(");
-                        PrintNodeInTex(output, differentiator, LEFT);
+                        PrintNodeInTeX(output, differentiator, LEFT);
                         fprintf(output, "\\right)");
                     } 
                     else
                     {
-                        PrintNodeInTex(output, differentiator, LEFT);
+                        PrintNodeInTeX(output, differentiator, LEFT);
                     }
 
                     fprintf(output, "^{");
-                    PrintNodeInTex(output, differentiator, RIGHT);
+                    PrintNodeInTeX(output, differentiator, RIGHT);
                     fprintf(output, "} ");
                     break;
                 }
@@ -71,12 +71,12 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
                     if (node_priority > GetPriority(LEFT))
                     {
                         fprintf(output, "\\left(");
-                        PrintNodeInTex(output, differentiator, LEFT);
+                        PrintNodeInTeX(output, differentiator, LEFT);
                         fprintf(output, "\\right)");
                     } 
                     else
                     {
-                        PrintNodeInTex(output, differentiator, LEFT);
+                        PrintNodeInTeX(output, differentiator, LEFT);
                     }
 
                     fprintf(output, " * ");
@@ -84,12 +84,12 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
                     if (node_priority > GetPriority(RIGHT))
                     {
                         fprintf(output, "\\left(");
-                        PrintNodeInTex(output, differentiator, RIGHT);
+                        PrintNodeInTeX(output, differentiator, RIGHT);
                         fprintf(output, "\\right)");
                     } 
                     else
                     {
-                        PrintNodeInTex(output, differentiator, RIGHT);
+                        PrintNodeInTeX(output, differentiator, RIGHT);
                     }
                     break;
                 }
@@ -99,12 +99,12 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
                     if (node_priority > GetPriority(LEFT))
                     {
                         fprintf(output, "\\left(");
-                        PrintNodeInTex(output, differentiator, LEFT);
+                        PrintNodeInTeX(output, differentiator, LEFT);
                         fprintf(output, "\\right)");
                     } 
                     else
                     {
-                        PrintNodeInTex(output, differentiator, LEFT);
+                        PrintNodeInTeX(output, differentiator, LEFT);
                     }
 
                     fprintf(output, " + ");
@@ -112,12 +112,12 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
                     if (node_priority > GetPriority(RIGHT))
                     {
                         fprintf(output, "\\left(");
-                        PrintNodeInTex(output, differentiator, RIGHT);
+                        PrintNodeInTeX(output, differentiator, RIGHT);
                         fprintf(output, "\\right)");
                     } 
                     else
                     {
-                        PrintNodeInTex(output, differentiator, RIGHT);
+                        PrintNodeInTeX(output, differentiator, RIGHT);
                     }
                     break;
                 }
@@ -127,12 +127,12 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
                     if (node_priority > GetPriority(LEFT))
                     {
                         fprintf(output, "\\left(");
-                        PrintNodeInTex(output, differentiator, LEFT);
+                        PrintNodeInTeX(output, differentiator, LEFT);
                         fprintf(output, "\\right)");
                     } 
                     else
                     {
-                        PrintNodeInTex(output, differentiator, LEFT);
+                        PrintNodeInTeX(output, differentiator, LEFT);
                     }
 
                     fprintf(output, " - ");
@@ -140,12 +140,12 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
                     if (node_priority > GetPriority(RIGHT))
                     {
                         fprintf(output, "\\left(");
-                        PrintNodeInTex(output, differentiator, RIGHT);
+                        PrintNodeInTeX(output, differentiator, RIGHT);
                         fprintf(output, "\\right)");
                     } 
                     else
                     {
-                        PrintNodeInTex(output, differentiator, RIGHT);
+                        PrintNodeInTeX(output, differentiator, RIGHT);
                     }
                     break;
                 }
@@ -153,7 +153,7 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
                 case OPERATION_COS:
                 {
                     fprintf(output, "cos(");
-                    PrintNodeInTex(output, differentiator, LEFT);
+                    PrintNodeInTeX(output, differentiator, LEFT);
                     fprintf(output, ") ");
                     break;
                 }
@@ -161,7 +161,7 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
                 case OPERATION_CTG:
                 {
                     fprintf(output, "ctg(");
-                    PrintNodeInTex(output, differentiator, LEFT);
+                    PrintNodeInTeX(output, differentiator, LEFT);
                     fprintf(output, ") ");
                     break;
                 }
@@ -169,7 +169,7 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
                 case OPERATION_LN:
                 {
                     fprintf(output, "\\ln(");
-                    PrintNodeInTex(output, differentiator, LEFT);
+                    PrintNodeInTeX(output, differentiator, LEFT);
                     fprintf(output, ") ");
                     break;
                 }
@@ -177,7 +177,7 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
                 case OPERATION_SIN:
                 {
                     fprintf(output, "sin(");
-                    PrintNodeInTex(output, differentiator, LEFT);
+                    PrintNodeInTeX(output, differentiator, LEFT);
                     fprintf(output, ") ");
                     break;
                 }
@@ -185,7 +185,7 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
                 case OPERATION_SQRT:
                 {
                     fprintf(output, "\\sqrt{");
-                    PrintNodeInTex(output, differentiator, LEFT);
+                    PrintNodeInTeX(output, differentiator, LEFT);
                     fprintf(output, "} ");
                     break;
                 }
@@ -193,7 +193,7 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
                 case OPERATION_TG:
                 {
                     fprintf(output, "tg(");
-                    PrintNodeInTex(output, differentiator, LEFT);
+                    PrintNodeInTeX(output, differentiator, LEFT);
                     fprintf(output, ") ");
                     break;
                 }
@@ -214,50 +214,43 @@ static void PrintNodeInTex(FILE* output, Differentiator* differentiator, Node* n
 
 //=================================================================================================
 
-static void DifferentiatorTextDump(FILE* output, Differentiator* differentiator)
+void DifferentiatorTextDump(FILE* output, Differentiator* differentiator, Node* node, const char* word)
 {
     PTR_ASSERT(output)
     PTR_ASSERT(differentiator)
+    PTR_ASSERT(word)
 
-    fprintf(output, "$ ");
+    fprintf(output, "%s", word);
 
-    PrintNodeInTex(output, differentiator, TREE.root);
+    fprintf(output, "$$ ");
 
-    fprintf(output, " $\n");
+    PrintNodeInTeX(output, differentiator, node);
+
+    fprintf(output, " $$\\\\\n");
 }
 
 //=================================================================================================
 
-static void ShowIntro(FILE* tex_file)
+void ShowIntro(FILE* tex_file)
 {
     fprintf(tex_file, BEGIN_MSG);
 }
 
 //=================================================================================================
 
-static void ShowOutro(FILE* tex_file)
+void ShowOutro(FILE* tex_file)
 {
     fprintf(tex_file, FINAL_MSG);
 }
 
 //=================================================================================================
 
-void PrintExpressionInTeX(FILE* tex_file, Differentiator* differentiator, Differentiator* derivative)
+void PrintExpressionInTeX(FILE* tex_file, Differentiator* differentiator, const char* word)
 {
     PTR_ASSERT(differentiator)
     PTR_ASSERT(tex_file)
 
-    ShowIntro(tex_file);
-
-    fprintf(tex_file, "Исходная функция f(x) = ");
-
-    DifferentiatorTextDump(tex_file, differentiator);
-
-    fprintf(tex_file, "\\\\ Производная f'(x) = ");
-
-    DifferentiatorTextDump(tex_file, derivative);
-
-    ShowOutro(tex_file);
+    DifferentiatorTextDump(tex_file, differentiator, TREE.root, word);
 }
 
 //=================================================================================================

@@ -31,12 +31,15 @@ static Node* CopyNode(Node* node)
     return new_node;
 }
 
-Node* DiffNode(Node* node, const int index)
+Node* DiffNode(FILE* tex_file, Differentiator* differentiator, Node* node, const int index)
 {
+    Node* new_node = nullptr;
+
     #define DEF_OPER(number, name, string, priority, diff_action)                       \
                 case OPERATION_##name:                                                  \
                 {                                                                       \
-                    return diff_action;                                                 \
+                    new_node = diff_action;                                             \
+                    break;                                                              \
                 }
 
     if (node == nullptr)
@@ -47,14 +50,12 @@ Node* DiffNode(Node* node, const int index)
     switch (TYPE)
     {
         case TYPE_NUMBER:
-            return NUM(0);
+            new_node = NUM(0);
+            break;
 
         case TYPE_VARIABLE:
-            if (VALUE.var_index == index)
-            {
-                return NUM(1);
-            }
-            return NUM(0);
+            new_node = NUM(VALUE.var_index == index);
+            break;
 
         case TYPE_OPERATION:
         {    
@@ -68,6 +69,10 @@ Node* DiffNode(Node* node, const int index)
             }
         }
     }
+
+    DifferentiatorTextDump(tex_file, differentiator, new_node, FUNNY_MATH_QUOTES[rand() % NUMBER_OF_QUOTES]);
+
+    return new_node;
 
     #undef DEF_OPER
 }
@@ -83,7 +88,7 @@ static void CopyVariables(NameTable* new_name_table, NameTable* name_table)
     }
 }
 
-error_t TakeXDerivative(Differentiator* differentiator, Differentiator* new_differentiator, const char* name_of_variable)
+error_t TakeXDerivative(FILE* tex_file, Differentiator* differentiator, Differentiator* new_differentiator, const char* name_of_variable)
 {
     PTR_ASSERT(differentiator)
     PTR_ASSERT(new_differentiator)
@@ -94,7 +99,7 @@ error_t TakeXDerivative(Differentiator* differentiator, Differentiator* new_diff
 
     int index = FindVariableInNameTable(&(new_differentiator->name_table), name_of_variable, &error);
 
-    new_differentiator->tree.root = DiffNode(differentiator->tree.root, index);
+    new_differentiator->tree.root = DiffNode(tex_file, differentiator, differentiator->tree.root, index);
 
     return error;
 }

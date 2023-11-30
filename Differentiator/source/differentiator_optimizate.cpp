@@ -201,7 +201,7 @@ static bool DeleteNeutralElements(Node* node)
 
 //=================================================================================================
 
-void DifferentiatorOptimizate(Differentiator* differentiator)
+void DifferentiatorSimplify(FILE* tex_file, Differentiator* differentiator)
 {
     PTR_ASSERT(differentiator)
 
@@ -210,10 +210,16 @@ void DifferentiatorOptimizate(Differentiator* differentiator)
     do
     {
         is_tree_changed = RemoveConstants(differentiator->tree.root);
-        is_tree_changed = DeleteNeutralElements(differentiator->tree.root);
-        is_tree_changed = false;
+        DeleteNeutralElements(differentiator->tree.root);
     } 
     while (is_tree_changed);
+
+    DeleteNeutralElements(differentiator->tree.root);
+    is_tree_changed = RemoveConstants(differentiator->tree.root);
+
+    int index = rand() % NUMBER_OF_QUOTES;
+
+    PrintExpressionInTeX(tex_file, differentiator, FUNNY_MATH_QUOTES[index]);
 }
 
 //=================================================================================================

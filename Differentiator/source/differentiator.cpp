@@ -42,6 +42,11 @@ static error_t NameTableDtor(NameTable* name_table)
 
     error_t error = NO_ERR;
 
+    for (size_t i = 0; i < name_table->size; i++)
+    {
+        free(name_table->array[i]);
+    }
+
     free(name_table->array);
     name_table->array    = nullptr;
     name_table->capacity = 0;
@@ -271,7 +276,7 @@ double DifferentiatorCalculate(Node* node)
                     return tan(left);
 
                 case OPERATION_CTG:
-                    if (IsZero(right))
+                    if (IsZero(left))
                     {
                         assert(false && ("ERROR! Ctg can not be calculated!!!\n"));
                     }

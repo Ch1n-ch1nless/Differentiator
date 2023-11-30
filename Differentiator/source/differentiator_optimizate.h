@@ -4,6 +4,6 @@
 #include "differentiator.h"
 #include "differentiator_output.h"
 
-void DifferentiatorOptimizate(Differentiator* differentiator);
+void DifferentiatorSimplify(FILE* tex_file, Differentiator* differentiator);
 
 #endif //DIFFERENTIATOR_OPTIMIZATED_H_INCLUDED
