@@ -79,7 +79,7 @@ static void PrintNodeInTeX(FILE* output, Differentiator* differentiator, Node* n
                         PrintNodeInTeX(output, differentiator, LEFT);
                     }
 
-                    fprintf(output, " * ");
+                    fprintf(output, " \\cdot ");
 
                     if (node_priority > GetPriority(RIGHT))
                     {
@@ -152,7 +152,7 @@ static void PrintNodeInTeX(FILE* output, Differentiator* differentiator, Node* n
 
                 case OPERATION_COS:
                 {
-                    fprintf(output, "cos(");
+                    fprintf(output, "\\cos(");
                     PrintNodeInTeX(output, differentiator, LEFT);
                     fprintf(output, ") ");
                     break;
@@ -160,7 +160,7 @@ static void PrintNodeInTeX(FILE* output, Differentiator* differentiator, Node* n
 
                 case OPERATION_CTG:
                 {
-                    fprintf(output, "ctg(");
+                    fprintf(output, "\\ctg(");
                     PrintNodeInTeX(output, differentiator, LEFT);
                     fprintf(output, ") ");
                     break;
@@ -176,7 +176,7 @@ static void PrintNodeInTeX(FILE* output, Differentiator* differentiator, Node* n
 
                 case OPERATION_SIN:
                 {
-                    fprintf(output, "sin(");
+                    fprintf(output, "\\sin(");
                     PrintNodeInTeX(output, differentiator, LEFT);
                     fprintf(output, ") ");
                     break;
@@ -192,7 +192,7 @@ static void PrintNodeInTeX(FILE* output, Differentiator* differentiator, Node* n
 
                 case OPERATION_TG:
                 {
-                    fprintf(output, "tg(");
+                    fprintf(output, "\\tg(");
                     PrintNodeInTeX(output, differentiator, LEFT);
                     fprintf(output, ") ");
                     break;

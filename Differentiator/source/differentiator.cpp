@@ -42,11 +42,6 @@ static error_t NameTableDtor(NameTable* name_table)
 
     error_t error = NO_ERR;
 
-    for (size_t i = 0; i < name_table->size; i++)
-    {
-        free(name_table->array[i]);
-    }
-
     free(name_table->array);
     name_table->array    = nullptr;
     name_table->capacity = 0;

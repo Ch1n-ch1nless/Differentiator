@@ -27,7 +27,7 @@ const char FINAL_MSG[] = R"(
 \end{document}
 )";
 
-const int NUMBER_OF_QUOTES  = 15;
+const int NUMBER_OF_QUOTES  = 16;
 const int MAX_SIZE_OF_QUOTE = 300;
 
 const char FUNNY_MATH_QUOTES[NUMBER_OF_QUOTES][MAX_SIZE_OF_QUOTE] = {
@@ -45,6 +45,7 @@ const char FUNNY_MATH_QUOTES[NUMBER_OF_QUOTES][MAX_SIZE_OF_QUOTE] = {
     {"Для решения этой задачи переместимся в n-мерное пр-во!!!\n"},
     {"Сейчас наступит катарсис!!!\n"},
     {"Вас ещё не кокнуло? Продолжаем!\n"},
+    {"Ну даже ёжику понятно, как посчитать эту производную!!!\n"},
     {"Получим вот такое выражение! Мы упустили часть доказательств равносильных переходов! Поэтому я хочу, чтобы ВЫ САМИ ИХ ДОКАЗАЛИ!\n"}
 };
 

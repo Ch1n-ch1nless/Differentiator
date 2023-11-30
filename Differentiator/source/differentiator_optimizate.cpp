@@ -67,13 +67,13 @@ static bool DeleteNeutralElements(Node* node)
         {
             case OPERATION_PLUS:
             {
-                if (((NodeData*)node->left)->type == TYPE_NUMBER && IsZero(((NodeData*)node->left)->value.num_value))
+                if (((NodeData*)node->left->data)->type == TYPE_NUMBER && IsZero(((NodeData*)node->left->data)->value.num_value))
                 {
                     SubTreeDtor(&(node->left));
                     *node = *node->right;
                     return true;
                 }
-                else if (((NodeData*)node->right)->type == TYPE_NUMBER && IsZero(((NodeData*)node->right)->value.num_value))
+                else if (((NodeData*)node->right->data)->type == TYPE_NUMBER && IsZero(((NodeData*)node->right->data)->value.num_value))
                 {
                     SubTreeDtor(&(node->right));
                     *node = *node->left;
@@ -160,7 +160,7 @@ static bool DeleteNeutralElements(Node* node)
                 {
                     SubTreeDtor(&(node->left));
                     SubTreeDtor(&(node->right));
-                    ((NodeData*)node->data)->type  = TYPE_NUMBER;
+                    ((NodeData*)node->data)->type            = TYPE_NUMBER;
                     ((NodeData*)node->data)->value.num_value = 1.0;
 
                     return true;
@@ -177,7 +177,7 @@ static bool DeleteNeutralElements(Node* node)
                 {
                     SubTreeDtor(&(node->left));
                     SubTreeDtor(&(node->right));
-                    ((NodeData*)node->data)->type  = TYPE_NUMBER;
+                    ((NodeData*)node->data)->type            = TYPE_NUMBER;
                     ((NodeData*)node->data)->value.num_value = 0.0;
 
                     return true;
@@ -209,8 +209,9 @@ void DifferentiatorSimplify(FILE* tex_file, Differentiator* differentiator)
 
     do
     {
+        is_tree_changed = false;
+        is_tree_changed = DeleteNeutralElements(differentiator->tree.root);
         is_tree_changed = RemoveConstants(differentiator->tree.root);
-        DeleteNeutralElements(differentiator->tree.root);
     } 
     while (is_tree_changed);
 
