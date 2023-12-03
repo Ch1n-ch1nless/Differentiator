@@ -5,7 +5,7 @@
 #define LEFT    node->left
 #define RIGHT   node->right
 
-static Node* NewNode(Types type, Value value, Node* left, Node* right)
+Node* NewNode(Types type, Value value, Node* left, Node* right)
 {
     error_t error = NO_ERR;
 

@@ -3,58 +3,23 @@
 #include "differentiator_output.h"
 #include "differentiator_derivative.h"
 
+#include "rec_spusk.h"
+
 int main()
 {
-    error_t error = NO_ERR;
+    Buffer equation = {};
+    scanf("%s", equation.buffer);
 
     Differentiator differentiator = {};
-    error = DifferentiatorCtor(&differentiator);
+    DifferentiatorCtor(&differentiator);
 
-    Differentiator derivative = {};
-    error = DifferentiatorCtor(&derivative);
+    differentiator.tree.root = GetG(&equation);
 
-    /*=== Reads tree ==*/
+    FILE* html_file = fopen("tree.html", "w");
 
-    error = CreateBufferFromFile(&differentiator, "data_base.txt");
-    error = ReadTreeFromBuffer(&differentiator);
+    DIF_HTML_DUMP(html_file, &differentiator);
 
-    /*=== Creates file.tex ===*/ 
+    fclose(html_file);
 
-    FILE* tex_file = nullptr;
-    error = OpenFile("tree.tex", &tex_file, "w");
-    if (error != NO_ERR)
-        return error;
-
-    /*=== Prints begin of document ===*/
-
-    ShowIntro(tex_file);
-
-    /*=== Prints math expression ===*/
-
-    PrintExpressionInTeX(tex_file, &differentiator, "Наше выражение: \n");
-
-    DifferentiatorSimplify(tex_file, &differentiator);
-
-    /*=== Takes derivative ===*/
-
-    TakeXDerivative(tex_file, &differentiator, &derivative, "x");
-
-    /*=== Prints derivative of math expression ===*/
-
-    PrintExpressionInTeX(tex_file, &derivative, "Производная выражения: \n");
-
-    DifferentiatorSimplify(tex_file, &derivative);
-
-    /*=== Creates Picture ===*/
-
-    TreeGraphDump(&derivative);
-
-    DifferentiatorDtor(&differentiator);
-    DifferentiatorDtor(&derivative);
-
-    /*=== Prints end of document ===*/
-
-    ShowOutro(tex_file);
-
-    return error;
+    return 0;
 }

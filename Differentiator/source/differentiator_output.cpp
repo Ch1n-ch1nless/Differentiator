@@ -368,11 +368,61 @@ void TreeGraphDump(Differentiator* differentiator)
     fprintf(dot_file, "}\n");
 
     fclose(dot_file);
+}
+
+//=================================================================================================
+
+static void PrintHtmlIntro(FILE* html_file)
+{
+    fprintf(html_file, "<html>\n"
+                        "\t<head>\n"
+                        "\t\t<title>\n"
+                        "\t\t\tList log\n"
+                        "\t\t</title>\n"
+                        "\t</head>\n"
+                        "\t<body>\n"      
+                        "\t\t<pre>\n");
+}
+
+//=================================================================================================
+
+static void PrintHtmlOutro(FILE* html_file)
+{
+    fprintf(html_file,  "\t\t</pre>\n"
+                        "\t</body>\n"
+                        "</html>");
+}
+
+//=================================================================================================
+
+void DifferentiatorHtmlDump(FILE* html_file, Differentiator* differentiator, const char* file, 
+                                                                             const int   line,
+                                                                             const char* func )
+{
+    PTR_ASSERT(differentiator)
+    PTR_ASSERT(html_file)
+
+    static int dump_iter = 0;
+
+    PrintHtmlIntro(html_file);
+
+    fprintf(html_file, "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv\n\n");
+
+    TreeTextDump(&(differentiator->tree), html_file, file, line, func, IN_ORDER);
+
+    TreeGraphDump(differentiator);
 
     char command[MAX_SIZE_OF_COMMAND] = {};
-    sprintf(command, "dot %s -T png -o %s", DOT_FILE, PICTURE_FILE);
+    sprintf(command, "dot %s -T png -o %s%d.png", DOT_FILE, PATH_TO_IMG, dump_iter);
     system(command);
-    //Do not check system!!! I need to fix it!!! >:(
+
+    fprintf(html_file, "<img src = %s%d.png height = 400>", PATH_TO_IMG, dump_iter);
+
+    fprintf(html_file, "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n");
+
+    dump_iter++;
+
+    PrintHtmlOutro(html_file);
 }
 
 //=================================================================================================

@@ -3,9 +3,10 @@
 
 #include "differentiator.h"
 #include "differentiator_input.h"
+#include "../../Tree/source/tree_dump.h"
 
 const char* const DOT_FILE      = "tree.dot";
-const char* const PICTURE_FILE  = "tree.png";
+const char* const PATH_TO_IMG  = "C:\\Users\\OlegA\\Desktop\\Differentiator\\Images\\";
 
 const char BEGIN_MSG[] = R"(\documentclass [a4paper, 12x `pt]{article}
 \usepackage [utf8] {inputenc}
@@ -60,5 +61,12 @@ void TreeGraphDump(Differentiator* differentiator);
 void ShowIntro(FILE* tex_file);
 
 void ShowOutro(FILE* tex_file);
+
+#define DIF_HTML_DUMP(html_file, differentiator) DifferentiatorHtmlDump(html_file, differentiator, __FILE__, __LINE__, \
+                                                                                                   __FUNCTION__)
+ 
+void DifferentiatorHtmlDump(FILE* html_file, Differentiator* differentiator, const char* file, 
+                                                                             const int   line,
+                                                                             const char* func );
 
 #endif //DIFFERENTIATOR_OUTPUT_H_INCLUDED
