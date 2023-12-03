@@ -27,7 +27,7 @@ static error_t NameTableCtor(NameTable* name_table)
     error_t error = NO_ERR;
 
     name_table->capacity = NAME_TABLE_CAPACITY_INIT;
-    name_table->array    = (const char**) calloc(name_table->capacity, sizeof(char*));
+    name_table->array    = (Variable*) calloc(name_table->capacity, sizeof(Variable));
     if (name_table->array == nullptr)
         error |= MEM_ALLOC_ERR;
 
@@ -60,8 +60,8 @@ static error_t NameTableResize(NameTable* name_table)
 
     name_table->capacity *= 2;
 
-    const char** temp_pointer = nullptr;
-    temp_pointer = (const char**) realloc(name_table->array, name_table->capacity);
+    Variable* temp_pointer = nullptr;
+    temp_pointer = (Variable*) realloc(name_table->array, name_table->capacity);
     if (temp_pointer == nullptr)
     {
         name_table->capacity /= 2;
@@ -124,7 +124,7 @@ size_t FindVariableInNameTable(NameTable* name_table, const char* name, error_t*
 
     for (size_t i = 0; i < name_table->size; i++)
     {
-        if (strcmp(name, name_table->array[i]) == 0)
+        if (strcmp(name, name_table->array[i].name) == 0)
         {
             return i;
         }
@@ -135,7 +135,7 @@ size_t FindVariableInNameTable(NameTable* name_table, const char* name, error_t*
 
 //=======================================================================================
 
-error_t AddVariableToNameTable(NameTable* name_table, const char* name_of_variable)
+error_t AddVariableToNameTable(NameTable* name_table, const char* name_of_variable, double value_of_variable)
 {
     PTR_ASSERT(name_table)
 
@@ -152,7 +152,8 @@ error_t AddVariableToNameTable(NameTable* name_table, const char* name_of_variab
             return error;
     }
 
-    name_table->array[name_table->size] = name_of_variable;
+    name_table->array[name_table->size].name  = name_of_variable;
+    name_table->array[name_table->size].value = value_of_variable;
     name_table->size += 1;
 
     return error;
@@ -222,7 +223,7 @@ Node* GetNodeFromStack(Stack* stk, Tree* tree, error_t* error)
 
 //=======================================================================================
 
-double DifferentiatorCalculate(Node* node)
+double DifferentiatorCalculate(Node* node, NameTable* name_table)
 {
     if (node == nullptr)
         return 0;
@@ -234,8 +235,8 @@ double DifferentiatorCalculate(Node* node)
 
         case TYPE_OPERATION:
         {
-            double left  = DifferentiatorCalculate(node->left );
-            double right = DifferentiatorCalculate(node->right);
+            double left  = DifferentiatorCalculate(node->left,  name_table);
+            double right = DifferentiatorCalculate(node->right, name_table);
 
             switch (((NodeData*)node->data)->value.oper_index)
             {
@@ -290,6 +291,10 @@ double DifferentiatorCalculate(Node* node)
         }
 
         case TYPE_VARIABLE:
+        {
+            size_t index = ((NodeData*)node->data)->value.var_index;
+            return name_table->array[index].value;
+        }
         case TYPE_UNDEFINED:
         default:
             return NAN;

@@ -255,7 +255,7 @@ static error_t IsArgumentVariable(char** cur_symbol, NodeData* arg, NameTable* n
             }
 
             index = name_table->size;
-            error |= AddVariableToNameTable(name_table, name_of_variable);
+            error |= AddVariableToNameTable(name_table, name_of_variable, NAN);
             arg->value.var_index = index;
 
             return error;

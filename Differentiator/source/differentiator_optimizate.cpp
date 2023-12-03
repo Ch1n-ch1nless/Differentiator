@@ -15,21 +15,21 @@ static bool FindVariable(Node* node)
 
 //=================================================================================================
 
-static bool RemoveConstants(Node* node)
+static bool RemoveConstants(Node* node, NameTable* name_table)
 {
     bool flag = false;
     
     if (node->left != nullptr)
-        flag |= RemoveConstants(node->left);
+        flag |= RemoveConstants(node->left,  name_table);
 
     if (node->right != nullptr)
-        flag |= RemoveConstants(node->right);
+        flag |= RemoveConstants(node->right, name_table);
 
     if (node->left != nullptr && node->right != nullptr &&  ((NodeData*)node->data)->type == TYPE_OPERATION)
     {
         if (FindVariable(node->left) == false && FindVariable(node->right) == false)
         {
-            double new_value = DifferentiatorCalculate(node);
+            double new_value = DifferentiatorCalculate(node, name_table);
             ((NodeData*)node->data)->type = TYPE_NUMBER;
             ((NodeData*)node->data)->value.num_value = new_value;
 
@@ -211,12 +211,12 @@ void DifferentiatorSimplify(FILE* tex_file, Differentiator* differentiator)
     {
         is_tree_changed = false;
         is_tree_changed = DeleteNeutralElements(differentiator->tree.root);
-        is_tree_changed = RemoveConstants(differentiator->tree.root);
+        is_tree_changed = RemoveConstants(differentiator->tree.root, &(differentiator->name_table));
     } 
     while (is_tree_changed);
 
     DeleteNeutralElements(differentiator->tree.root);
-    is_tree_changed = RemoveConstants(differentiator->tree.root);
+    RemoveConstants(differentiator->tree.root, &(differentiator->name_table));
 
     int index = rand() % NUMBER_OF_QUOTES;
 

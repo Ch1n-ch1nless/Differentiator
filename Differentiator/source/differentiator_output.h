@@ -7,8 +7,7 @@
 const char* const DOT_FILE      = "tree.dot";
 const char* const PICTURE_FILE  = "tree.png";
 
-const char BEGIN_MSG[] = R"(
-\documentclass [a4paper, 12x `pt]{article}
+const char BEGIN_MSG[] = R"(\documentclass [a4paper, 12x `pt]{article}
 \usepackage [utf8] {inputenc}
 \usepackage [T2A] {fontenc}
 \usepackage [russian] {babel}
@@ -23,7 +22,6 @@ const char BEGIN_MSG[] = R"(
 )";
 
 const char FINAL_MSG[] = R"(
-
 \end{document}
 )";
 
@@ -52,6 +50,8 @@ const char FUNNY_MATH_QUOTES[NUMBER_OF_QUOTES][MAX_SIZE_OF_QUOTE] = {
 const size_t MAX_SIZE_OF_COMMAND = 1 << 10;
 
 void DifferentiatorTextDump(FILE* output, Differentiator* differentiator, Node* node, const char* word);
+
+void DerivativeTextDump(FILE* output, Differentiator* differentiator, Node* node, Node* diff_node, const char* word);
 
 void PrintExpressionInTeX(FILE* tex_file, Differentiator* differentiator, const char* word);
 

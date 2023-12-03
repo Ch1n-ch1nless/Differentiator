@@ -70,7 +70,7 @@ Node* DiffNode(FILE* tex_file, Differentiator* differentiator, Node* node, const
         }
     }
 
-    DifferentiatorTextDump(tex_file, differentiator, new_node, FUNNY_MATH_QUOTES[rand() % NUMBER_OF_QUOTES]);
+    DerivativeTextDump(tex_file, differentiator, node, new_node, FUNNY_MATH_QUOTES[rand() % NUMBER_OF_QUOTES]);
 
     return new_node;
 
@@ -84,7 +84,7 @@ static void CopyVariables(NameTable* new_name_table, NameTable* name_table)
 
     for (size_t i = 0; i < name_table->size; i++)
     {
-        AddVariableToNameTable(new_name_table, name_table->array[i]);
+        AddVariableToNameTable(new_name_table, name_table->array[i].name, name_table->array[i].value);
     }
 }
 

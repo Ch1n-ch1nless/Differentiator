@@ -231,6 +231,27 @@ void DifferentiatorTextDump(FILE* output, Differentiator* differentiator, Node* 
 
 //=================================================================================================
 
+void DerivativeTextDump(FILE* output, Differentiator* differentiator, Node* node, Node* diff_node, const char* word)
+{
+    PTR_ASSERT(output)
+    PTR_ASSERT(differentiator)
+    PTR_ASSERT(word)
+    
+    fprintf(output, "%s", word);
+
+    fprintf(output, "$$ \\frac{d}{dx}(");
+
+    PrintNodeInTeX(output, differentiator, node);
+
+    fprintf(output, ") = ");
+
+    PrintNodeInTeX(output, differentiator, diff_node);
+
+    fprintf(output, " $$\\\\\n");
+}
+
+//=================================================================================================
+
 void ShowIntro(FILE* tex_file)
 {
     fprintf(tex_file, BEGIN_MSG);

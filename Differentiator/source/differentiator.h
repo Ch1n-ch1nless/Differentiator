@@ -9,11 +9,17 @@
 
 /*============================================== STRUCTS =================================================*/
 
+struct Variable
+{
+    const char* name  = nullptr;
+    double      value = NAN;
+};
+
 struct NameTable
 {
-    const char** array    = nullptr;
-    size_t       size     = 0;
-    size_t       capacity = 0;
+    Variable* array    = nullptr;
+    size_t    size     = 0;
+    size_t    capacity = 0;
 };
 
 struct Differentiator
@@ -86,12 +92,12 @@ error_t DifferentiatorCtor(Differentiator* differentiator);
 error_t DifferentiatorDtor(Differentiator* differentiator);
 
 size_t  FindVariableInNameTable(NameTable* name_table, const char* name_of_variable, error_t* error);
-error_t AddVariableToNameTable( NameTable* name_table, const char* name_of_variable);
+error_t AddVariableToNameTable( NameTable* name_table, const char* name_of_variable, double value_of_variable);
 
 int     GetPriority(Node* node);
 
 Node*   GetNodeFromStack(Stack* stk, Tree* tree, error_t* error);
 
-double  DifferentiatorCalculate(Node* node);
+double  DifferentiatorCalculate(Node* node, NameTable* name_table);
 
 #endif //DIFFERENTIATOR_H_INCLUDED
