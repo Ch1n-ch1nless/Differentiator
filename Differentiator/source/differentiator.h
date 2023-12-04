@@ -68,8 +68,8 @@ const OperationInfo OPERATION_TABLE[END_OF_OPERATION_ENUM] =
 union Value
 {
     double num_value;
-    size_t oper_index;
-    size_t var_index;
+    int    oper_index;
+    int    var_index;
 };
 
 struct NodeData

@@ -21,7 +21,7 @@ DEF_OPER(5,  SIN,   "sin",  5,  {
                                     MUL(dL, COS(cL))
                                 })
 DEF_OPER(6,  COS,   "cos",  5,  {
-                                    MUL(NUM(-1), MUL(dL, SIN(dL)))
+                                    MUL(NUM(-1), MUL(dL, SIN(cL)))
                                 })
 DEF_OPER(7,  TG,    "tg",   5,  {
                                     DIV(dL, POW(COS(cL), NUM(2)))
