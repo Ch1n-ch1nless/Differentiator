@@ -251,21 +251,30 @@ void MakeGraphic(FILE* pdf_file, Differentiator* differentiator)
     PTR_ASSERT(pdf_file)
     PTR_ASSERT(differentiator)
 
-    FILE* gp = popen("C:\\\"Program Files\"\\gnuplot\\bin\\pgnuplot -persist", "w");
-    if (gp == nullptr)
-    {
-        printf("ERROR! Program can not open file!!\n");
-    }
+    FILE* gnu_script = fopen("gnu_script.gpl", "w");
+    fprintf(gnu_script, "#! /usr/bin/gnuplot -persist\n"
+                        "set xlabel \"X\"\n" 
+                        "set ylabel \"Y\"\n"
+                        "set grid\n"
+                        "set yrange [-10.1:10.1]\n"
+                        "set xrange [-10.1:10.1]\n"
+                        "set title \"Graph of function\" font \"Helvetica Bold, 20\"\n"
+                        "set terminal png size 800, 600\n"
+                        "set output \"Images/graphic.png\"\n"  
+                        "plot "                                                         );
 
-    fprintf(gp, "set terminal win\n");
-    fprintf(gp, "plot ");
+    PrintEquationToPlot(gnu_script, differentiator, differentiator->tree.root);
 
-    PrintEquationToPlot(gp, differentiator, differentiator->tree.root);
+    fprintf(gnu_script, " title \"f(x)\"  lc rgb \"red\"");
 
-    fprintf(gp, "\n");
+    fclose(gnu_script);
 
-    fprintf(gp, "pause -1 \"hit enter to exit\"\n");
-    fprintf(gp, "exit\n");
-    pclose(gp);
+    system("chmod +x gnu_script.gpl");
+    system("./gnu_script.gpl");
 
+    fprintf(pdf_file,   "\\begin{figure}\n"
+                        "\t\\centering\n"
+                        "\t\\includegraphics[width=0.5\\linewidth]{Images/graphic.png}\n"
+                        "\t\\caption{\\label{fig:func}Graph of function.}\n"
+                        "\\end{figure}\n"                                                );
 }

@@ -395,6 +395,237 @@ static void PrintHtmlOutro(FILE* html_file)
 
 //=================================================================================================
 
+static void PrintEquationToHtmlDump(FILE* output, Differentiator* differentiator, Node* node)
+{
+    PTR_ASSERT(output)
+    PTR_ASSERT(differentiator)
+    PTR_ASSERT(node)
+
+    int node_priority = GetPriority(node); 
+
+    switch (TYPE)
+    {
+        case TYPE_NUMBER:
+            fprintf(output, "%lg", VALUE.num_value);
+            break;
+
+        case TYPE_VARIABLE:
+        {
+            int index = VALUE.var_index;
+            fprintf(output, "%s", ARRAY[index].name);
+            break;
+        }
+
+        case TYPE_OPERATION:
+        {
+            Operations oper = (Operations) VALUE.oper_index;
+
+            switch (oper)
+            {
+                case OPERATION_DIV:
+                {
+                    if (node_priority > GetPriority(LEFT))
+                    {
+                        fprintf(output, "\\left(");
+                        PrintEquationToHtmlDump(output, differentiator, LEFT);
+                        fprintf(output, "\\right)");
+                    } 
+                    else
+                    {
+                        PrintEquationToHtmlDump(output, differentiator, LEFT);
+                    }
+
+                    fprintf(output, " / ");
+
+                    if (node_priority > GetPriority(RIGHT))
+                    {
+                        fprintf(output, "\\left(");
+                        PrintEquationToHtmlDump(output, differentiator, RIGHT);
+                        fprintf(output, "\\right)");
+                    } 
+                    else
+                    {
+                        PrintEquationToHtmlDump(output, differentiator, RIGHT);
+                    }
+                    break;
+                }
+
+                case OPERATION_POW:
+                {
+                    if (node_priority > GetPriority(LEFT))
+                    {
+                        fprintf(output, "\\left(");
+                        PrintEquationToHtmlDump(output, differentiator, LEFT);
+                        fprintf(output, "\\right)");
+                    } 
+                    else
+                    {
+                        PrintEquationToHtmlDump(output, differentiator, LEFT);
+                    }
+
+                    fprintf(output, " ^ ");
+
+                    if (node_priority > GetPriority(RIGHT))
+                    {
+                        fprintf(output, "\\left(");
+                        PrintEquationToHtmlDump(output, differentiator, RIGHT);
+                        fprintf(output, "\\right)");
+                    } 
+                    else
+                    {
+                        PrintEquationToHtmlDump(output, differentiator, RIGHT);
+                    }
+                    break;
+                }
+
+                case OPERATION_MUL:
+                {
+                    if (node_priority > GetPriority(LEFT))
+                    {
+                        fprintf(output, "\\left(");
+                        PrintEquationToHtmlDump(output, differentiator, LEFT);
+                        fprintf(output, "\\right)");
+                    } 
+                    else
+                    {
+                        PrintEquationToHtmlDump(output, differentiator, LEFT);
+                    }
+
+                    fprintf(output, " * ");
+
+                    if (node_priority > GetPriority(RIGHT))
+                    {
+                        fprintf(output, "\\left(");
+                        PrintEquationToHtmlDump(output, differentiator, RIGHT);
+                        fprintf(output, "\\right)");
+                    } 
+                    else
+                    {
+                        PrintEquationToHtmlDump(output, differentiator, RIGHT);
+                    }
+                    break;
+                }
+
+                case OPERATION_PLUS:
+                {
+                    if (node_priority > GetPriority(LEFT))
+                    {
+                        fprintf(output, "\\left(");
+                        PrintEquationToHtmlDump(output, differentiator, LEFT);
+                        fprintf(output, "\\right)");
+                    } 
+                    else
+                    {
+                        PrintEquationToHtmlDump(output, differentiator, LEFT);
+                    }
+
+                    fprintf(output, " + ");
+
+                    if (node_priority > GetPriority(RIGHT))
+                    {
+                        fprintf(output, "\\left(");
+                        PrintEquationToHtmlDump(output, differentiator, RIGHT);
+                        fprintf(output, "\\right)");
+                    } 
+                    else
+                    {
+                        PrintEquationToHtmlDump(output, differentiator, RIGHT);
+                    }
+                    break;
+                }
+
+                case OPERATION_MINUS:
+                {
+                    if (node_priority > GetPriority(LEFT))
+                    {
+                        fprintf(output, "\\left(");
+                        PrintEquationToHtmlDump(output, differentiator, LEFT);
+                        fprintf(output, "\\right)");
+                    } 
+                    else
+                    {
+                        PrintEquationToHtmlDump(output, differentiator, LEFT);
+                    }
+
+                    fprintf(output, " - ");
+
+                    if (node_priority > GetPriority(RIGHT))
+                    {
+                        fprintf(output, "\\left(");
+                        PrintEquationToHtmlDump(output, differentiator, RIGHT);
+                        fprintf(output, "\\right)");
+                    } 
+                    else
+                    {
+                        PrintEquationToHtmlDump(output, differentiator, RIGHT);
+                    }
+                    break;
+                }
+
+                case OPERATION_COS:
+                {
+                    fprintf(output, "cos(");
+                    PrintEquationToHtmlDump(output, differentiator, LEFT);
+                    fprintf(output, ") ");
+                    break;
+                }
+
+                case OPERATION_CTG:
+                {
+                    fprintf(output, "ctg(");
+                    PrintEquationToHtmlDump(output, differentiator, LEFT);
+                    fprintf(output, ") ");
+                    break;
+                }
+
+                case OPERATION_LN:
+                {
+                    fprintf(output, "ln(");
+                    PrintEquationToHtmlDump(output, differentiator, LEFT);
+                    fprintf(output, ") ");
+                    break;
+                }
+
+                case OPERATION_SIN:
+                {
+                    fprintf(output, "sin(");
+                    PrintEquationToHtmlDump(output, differentiator, LEFT);
+                    fprintf(output, ") ");
+                    break;
+                }
+
+                case OPERATION_SQRT:
+                {
+                    fprintf(output, "sqrt(");
+                    PrintEquationToHtmlDump(output, differentiator, LEFT);
+                    fprintf(output, ") ");
+                    break;
+                }
+
+                case OPERATION_TG:
+                {
+                    fprintf(output, "tg(");
+                    PrintEquationToHtmlDump(output, differentiator, LEFT);
+                    fprintf(output, ") ");
+                    break;
+                }
+                
+                case OPERATION_UNDEFINED:
+                default:
+                    break;
+            }
+            break;
+        }
+
+        case TYPE_UNDEFINED:
+        default:
+            printf("ERROR!!! Undefined type of argument!!!\n");
+            break;
+    }
+}
+
+//=================================================================================================
+
 void DifferentiatorHtmlDump(FILE* html_file, Differentiator* differentiator, const char* file, 
                                                                              const int   line,
                                                                              const char* func )
@@ -408,7 +639,7 @@ void DifferentiatorHtmlDump(FILE* html_file, Differentiator* differentiator, con
 
     fprintf(html_file, "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv\n\n");
 
-    TreeTextDump(&(differentiator->tree), html_file, file, line, func, IN_ORDER);
+    PrintEquationToHtmlDump(html_file, differentiator, differentiator->tree.root);
 
     TreeGraphDump(differentiator);
 
@@ -416,7 +647,7 @@ void DifferentiatorHtmlDump(FILE* html_file, Differentiator* differentiator, con
     sprintf(command, "dot %s -T png -o %s%d.png", DOT_FILE, PATH_TO_IMG, dump_iter);
     system(command);
 
-    fprintf(html_file, "<img src = %s%d.png height = 400>", PATH_TO_IMG, dump_iter);
+    fprintf(html_file, "<img src = %s%d.png height = 400>\n", PATH_TO_IMG, dump_iter);
 
     fprintf(html_file, "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n");
 

@@ -6,13 +6,16 @@
 #include "../../Tree/source/tree_dump.h"
 
 const char* const DOT_FILE      = "tree.dot";
-const char* const PATH_TO_IMG  = "C:\\Users\\OlegA\\Desktop\\Differentiator\\Images\\tree";
+const char* const PATH_TO_IMG  =  "Images/tree";
 
 const char BEGIN_MSG[] = R"(\documentclass [a4paper, 12x `pt]{article}
 \usepackage [utf8] {inputenc}
 \usepackage [T2A] {fontenc}
 \usepackage [russian] {babel}
 \usepackage {amsmath, amsfonts, amssymb, amsthm, mathtools, textcomp, stmaryrd}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{wrapfig}
 
 \title{Начало Математического безумия!}
 \author{Александров Олег}
