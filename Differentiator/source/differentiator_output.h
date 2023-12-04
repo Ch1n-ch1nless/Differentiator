@@ -6,7 +6,7 @@
 #include "../../Tree/source/tree_dump.h"
 
 const char* const DOT_FILE      = "tree.dot";
-const char* const PATH_TO_IMG  = "C:\\Users\\OlegA\\Desktop\\Differentiator\\Images\\";
+const char* const PATH_TO_IMG  = "C:\\Users\\OlegA\\Desktop\\Differentiator\\Images\\tree";
 
 const char BEGIN_MSG[] = R"(\documentclass [a4paper, 12x `pt]{article}
 \usepackage [utf8] {inputenc}
