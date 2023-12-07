@@ -1,7 +1,7 @@
 #include "differentiator_derivative.h"
 
-#define TYPE    ((NodeData*)node->data)->type
-#define VALUE   ((NodeData*)node->data)->value
+#define TYPE    ((Lexem*)node->data)->type
+#define VALUE   ((Lexem*)node->data)->value
 #define LEFT    node->left
 #define RIGHT   node->right
 
@@ -9,7 +9,7 @@ Node* NewNode(Types type, Value value, Node* left, Node* right)
 {
     error_t error = NO_ERR;
 
-    NodeData* arg = (NodeData*) calloc(1, sizeof(NodeData));
+    Lexem* arg = (Lexem*) calloc(1, sizeof(Lexem));
 
     arg->type  = type;
     arg->value = value;

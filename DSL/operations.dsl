@@ -35,3 +35,9 @@ DEF_OPER(9,  LN,    "ln",   5,  {
 DEF_OPER(10, SQRT,  "sqrt", 5,  {
                                     DIV(dL, MUL(NUM(2), SQRT(cL)))
                                 })
+DEF_OPER(11, LEFT,  "(",    6,  {
+                                    dL
+                                })
+DEF_OPER(12, RIGHT, ")",    6,  {
+                                    dR
+                                })

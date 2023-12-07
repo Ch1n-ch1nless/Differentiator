@@ -163,7 +163,7 @@ static Operations FindOperationInTable(char* string)
 
 //=================================================================================================
 
-static error_t IsArgumentNumber(char** cur_symbol, NodeData* arg)
+static error_t IsArgumentNumber(char** cur_symbol, Lexem* arg)
 {
     PTR_ASSERT( cur_symbol)
     PTR_ASSERT(*cur_symbol)
@@ -192,7 +192,7 @@ static error_t IsArgumentNumber(char** cur_symbol, NodeData* arg)
 
 //=================================================================================================
 
-static error_t IsArgumentOperation(char** cur_symbol, NodeData* arg)
+static error_t IsArgumentOperation(char** cur_symbol, Lexem* arg)
 {
     PTR_ASSERT( cur_symbol)
     PTR_ASSERT(*cur_symbol)
@@ -227,7 +227,7 @@ static error_t IsArgumentOperation(char** cur_symbol, NodeData* arg)
 
 //=================================================================================================
 
-static error_t IsArgumentVariable(char** cur_symbol, NodeData* arg, NameTable* name_table)
+static error_t IsArgumentVariable(char** cur_symbol, Lexem* arg, NameTable* name_table)
 {
     PTR_ASSERT( cur_symbol)
     PTR_ASSERT(*cur_symbol)
@@ -236,7 +236,7 @@ static error_t IsArgumentVariable(char** cur_symbol, NodeData* arg, NameTable* n
 
     error_t error = NO_ERR;
 
-    int number_of_symbols                  = 0;
+    int number_of_symbols  = 0;
     char* name_of_variable = (char*) calloc(MAX_LEN_OF_WORD, sizeof(char));
 
     if (arg->type == TYPE_UNDEFINED)
@@ -269,93 +269,135 @@ static error_t IsArgumentVariable(char** cur_symbol, NodeData* arg, NameTable* n
 
 //=================================================================================================
 
-static NodeData* ReadArgument(char** const cur_symbol, error_t* const error, NameTable* name_table)
+static void ReadArgument(char** const cur_symbol, error_t* const error, NameTable* name_table, Lexem* new_lexem)
 {
     PTR_ASSERT( cur_symbol)
     PTR_ASSERT(*cur_symbol)
     PTR_ASSERT(error)
     PTR_ASSERT(name_table)
+    PTR_ASSERT(new_lexem)
 
-    NodeData* arg = (NodeData*) calloc(1, sizeof(NodeData));
-    if (arg == nullptr)
-    {
-        *error |= MEM_ALLOC_ERR;
-        return nullptr;
-    }
-
-    arg->type            = TYPE_UNDEFINED;
-    arg->value.num_value = NAN;
-
-    *error |= IsArgumentNumber(cur_symbol, arg);
-    *error |= IsArgumentOperation(cur_symbol, arg);
-    *error |= IsArgumentVariable(cur_symbol, arg, name_table);
-
-    return arg;
+    *error |= IsArgumentNumber(     cur_symbol, new_lexem);
+    *error |= IsArgumentOperation(  cur_symbol, new_lexem);
+    *error |= IsArgumentVariable(   cur_symbol, new_lexem, name_table);
 }
 
 //=================================================================================================
 
-error_t ReadTreeFromBuffer(Differentiator* const differentiator)
+static error_t CreateToken(Differentiator* const differentiator, char** const ptr_to_lexem, Lexem* new_lexem)
 {
     PTR_ASSERT(differentiator)
-    PTR_ASSERT(BUFFER)
+    PTR_ASSERT(ptr_to_lexem)
 
     error_t error = NO_ERR;
-
-    Node* node = TREE.root;
-
-    char* cur_symbol = BUFFER;
-
-    Stack stk = {};
-    error |= STACK_CTOR(&stk);
     
-    while ((size_t)(cur_symbol - BUFFER) < BUF_SIZE)
-    {
-        error |= SkipWhiteSpaces(&cur_symbol);
+    char* name_of_arg = (char*) calloc(MAX_LEN_OF_WORD, sizeof(char));
+    if (name_of_arg == nullptr)
+        return error | MEM_ALLOC_ERR;
 
-        if (*cur_symbol == OPEN_NODE_BRACKET)
+    int index = 0;
+
+    while (isalnum(**ptr_to_lexem) && index < MAX_LEN_OF_WORD)
+    {
+        name_of_arg[index] = **ptr_to_lexem;
+        (*ptr_to_lexem)++;
+        index++;
+    }
+
+    ReadArgument(&name_of_arg, &error, &(differentiator->name_table), new_lexem);
+
+    return error;
+}
+
+//=================================================================================================
+
+error_t TokenizeBuffer(Differentiator* const differentiator)
+{
+    PTR_ASSERT(differentiator)
+
+    error_t error       = NO_ERR;
+    char* ptr_to_lexem  = differentiator->buffer;
+
+    while ((ptr_to_lexem - differentiator->buffer) < differentiator->buf_size)
+    {
+        Lexem* lexem_ptr = (Lexem*) calloc(1, sizeof(Lexem));
+        lexem_ptr->type  = TYPE_UNDEFINED;
+        lexem_ptr->value = {.num_value = NAN};
+
+        switch (*ptr_to_lexem)
         {
-            if (node->left == nullptr)
-                {
-                    error |= StackPush(&stk, ADD_LEFT_NODE);
-                    node->left = NodeCtor(&error, nullptr);
-                    node = node->left;
-                }
-                else
-                {
-                    if (node->right == nullptr)
-                    {
-                        error |= StackPush(&stk, ADD_RIGHT_NODE);
-                        node->right = NodeCtor(&error, nullptr);
-                        node = node->right;
-                    }
-                    else
-                    {
-                        error |= WRONG_BUFFER_SYNTAX_ERR;
-                        return error;
-                    }
-                }
-                cur_symbol++;
-        }
-        else if (*cur_symbol == CLOSE_NODE_BRACKET)
-        {
-            if (stk.size == 0 && ((size_t)(cur_symbol - BUFFER) != BUF_SIZE - 1))
+            case ' ' :
+            case '\n':
+            case '\t':
+            case '\r':
             {
-                error |= WRONG_BUFFER_SYNTAX_ERR;
-                return error;
+                *ptr_to_lexem = '\0';
+                ptr_to_lexem++;
+                SkipWhiteSpaces(&(ptr_to_lexem));
+                break;
             }
 
-                stk_elem_t ret_value = STK_POISON_VALUE;
-                error |= StackPop(&stk, &ret_value);
+            case '(':
+            {
+                lexem_ptr->type             = TYPE_OPERATION;
+                lexem_ptr->value.oper_index = OPERATION_LEFT;
+                ptr_to_lexem++;
+                break;
+            }
+            case ')':
+            {
+                lexem_ptr->type             = TYPE_OPERATION;
+                lexem_ptr->value.oper_index = OPERATION_RIGHT;
+                ptr_to_lexem++;
+                break;
+            }
+            case '+':
+            {
+                lexem_ptr->type             = TYPE_OPERATION;
+                lexem_ptr->value.oper_index = OPERATION_PLUS;
+                ptr_to_lexem++;
+                break;
+            }
+            case '-':
+            {
+                lexem_ptr->type             = TYPE_OPERATION;
+                lexem_ptr->value.oper_index = OPERATION_MINUS;
+                ptr_to_lexem++;
+                break;
+            }
+            case '*':
+            {
+                lexem_ptr->type             = TYPE_OPERATION;
+                lexem_ptr->value.oper_index = OPERATION_MUL;
+                ptr_to_lexem++;
+                break;
+            }
+            case '/':
+            {
+                lexem_ptr->type             = TYPE_OPERATION;
+                lexem_ptr->value.oper_index = OPERATION_DIV;
+                ptr_to_lexem++;
+                break;
+            }
+            case '^':
+            {
+                lexem_ptr->type             = TYPE_OPERATION;
+                lexem_ptr->value.oper_index = OPERATION_POW;
+                ptr_to_lexem++;
+                break;
+            }
 
-                node = GetNodeFromStack(&stk, &TREE, &error);
-
-                cur_symbol++;
+            default:
+                error = CreateToken(differentiator, &ptr_to_lexem, lexem_ptr);
+                break;
         }
-        else
+
+        if (lexem_ptr->type != TYPE_UNDEFINED)
         {
-            node->data = ReadArgument(&cur_symbol, &error, &(differentiator->name_table));
+            error |= AddLexemToArray(differentiator, lexem_ptr);
         }
+
+        free(lexem_ptr);
     }
 
     return error;

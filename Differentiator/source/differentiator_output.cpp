@@ -3,8 +3,8 @@
 #define ARRAY differentiator->name_table.array
 #define SIZE  differentiator->name_table.size
 #define TREE  differentiator->tree
-#define VALUE ((NodeData*)node->data)->value
-#define TYPE  ((NodeData*)node->data)->type
+#define VALUE ((Lexem*)node->data)->value
+#define TYPE  ((Lexem*)node->data)->type
 #define LEFT  node->left
 #define RIGHT node->right
 

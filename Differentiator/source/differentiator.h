@@ -9,27 +9,6 @@
 
 /*============================================== STRUCTS =================================================*/
 
-struct Variable
-{
-    const char* name  = nullptr;
-    double      value = NAN;
-};
-
-struct NameTable
-{
-    Variable* array    = nullptr;
-    size_t    size     = 0;
-    size_t    capacity = 0;
-};
-
-struct Differentiator
-{
-    Tree        tree        = {};
-    char*       buffer      = nullptr;
-    size_t      buf_size    = 0;
-    NameTable   name_table  = {};
-};
-
 enum Types : int
 {
     TYPE_UNDEFINED  = -1,
@@ -56,6 +35,48 @@ struct OperationInfo
     Operations  oper;
 };
 
+union Value
+{
+    double num_value;
+    int    oper_index;
+    int    var_index;
+};
+
+struct Lexem
+{
+    Types  type  = TYPE_UNDEFINED;
+    Value  value;
+};
+
+struct Variable
+{
+    const char* name  = nullptr;
+    double      value = NAN;
+};
+
+struct LexemArray
+{   
+    Lexem* array    = nullptr;
+    size_t size     = 0;
+    size_t capacity = 0;
+};
+
+struct NameTable
+{
+    Variable* array    = nullptr;
+    size_t    size     = 0;
+    size_t    capacity = 0;
+};
+
+struct Differentiator
+{
+    Tree        tree        = {};
+    char*       buffer      = nullptr;
+    size_t      buf_size    = 0;
+    LexemArray  lexem_array = {};
+    NameTable   name_table  = {};
+};
+
 #define DEF_OPER(number, name, operation_in_file, ...) {operation_in_file, OPERATION_##name},
 
 const OperationInfo OPERATION_TABLE[END_OF_OPERATION_ENUM] = 
@@ -65,21 +86,9 @@ const OperationInfo OPERATION_TABLE[END_OF_OPERATION_ENUM] =
 
 #undef DEF_OPER
 
-union Value
-{
-    double num_value;
-    int    oper_index;
-    int    var_index;
-};
-
-struct NodeData
-{
-    Types  type  = TYPE_UNDEFINED;
-    Value  value;
-};
-
-const size_t NAME_TABLE_CAPACITY_INIT = 16;
-const int    VARIABLE_WAS_NOT_FOUND   = -1;
+const size_t NAME_TABLE_CAPACITY_INIT  = 16;
+const size_t LEXEM_ARRAY_CAPACITY_INIT = 16;
+const int    VARIABLE_WAS_NOT_FOUND    = -1;
 
 const double EPS = 1e-6;
 
@@ -91,8 +100,12 @@ bool    IsOne( double number);
 error_t DifferentiatorCtor(Differentiator* differentiator);
 error_t DifferentiatorDtor(Differentiator* differentiator);
 
+error_t DifferentiatorVerify(Differentiator* differentiator);
+void    PrintDifferentiatorErrors(Differentiator* differentiator, error_t error);
+
 size_t  FindVariableInNameTable(NameTable* name_table, const char* name_of_variable, error_t* error);
 error_t AddVariableToNameTable( NameTable* name_table, const char* name_of_variable, double value_of_variable);
+error_t AddLexemToArray(Differentiator* differentiator, Lexem* new_node_data);
 
 int     GetPriority(Node* node);
 

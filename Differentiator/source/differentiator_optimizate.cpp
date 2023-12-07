@@ -7,7 +7,7 @@ static bool FindVariable(Node* node)
     if (node == nullptr)
         return false;
 
-    if (((NodeData*)node->data)->type == TYPE_VARIABLE)
+    if (((Lexem*)node->data)->type == TYPE_VARIABLE)
         return true;
 
     return FindVariable(node->left) || FindVariable(node->right);
@@ -25,13 +25,13 @@ static bool RemoveConstants(Node* node, NameTable* name_table)
     if (node->right != nullptr)
         flag |= RemoveConstants(node->right, name_table);
 
-    if (node->left != nullptr && node->right != nullptr &&  ((NodeData*)node->data)->type == TYPE_OPERATION)
+    if (node->left != nullptr && node->right != nullptr &&  ((Lexem*)node->data)->type == TYPE_OPERATION)
     {
         if (FindVariable(node->left) == false && FindVariable(node->right) == false)
         {
             double new_value = DifferentiatorCalculate(node, name_table);
-            ((NodeData*)node->data)->type = TYPE_NUMBER;
-            ((NodeData*)node->data)->value.num_value = new_value;
+            ((Lexem*)node->data)->type = TYPE_NUMBER;
+            ((Lexem*)node->data)->value.num_value = new_value;
 
             free(node->left);
             node->left = nullptr;
@@ -61,19 +61,19 @@ static bool DeleteNeutralElements(Node* node)
     if (node->right != nullptr)
         flag |= DeleteNeutralElements(node->right);
 
-    if (((NodeData*)node->data)->type == TYPE_OPERATION)
+    if (((Lexem*)node->data)->type == TYPE_OPERATION)
     {
-        switch (((NodeData*)node->data)->value.oper_index)
+        switch (((Lexem*)node->data)->value.oper_index)
         {
             case OPERATION_PLUS:
             {
-                if (((NodeData*)node->left->data)->type == TYPE_NUMBER && IsZero(((NodeData*)node->left->data)->value.num_value))
+                if (((Lexem*)node->left->data)->type == TYPE_NUMBER && IsZero(((Lexem*)node->left->data)->value.num_value))
                 {
                     SubTreeDtor(&(node->left));
                     *node = *node->right;
                     return true;
                 }
-                else if (((NodeData*)node->right->data)->type == TYPE_NUMBER && IsZero(((NodeData*)node->right->data)->value.num_value))
+                else if (((Lexem*)node->right->data)->type == TYPE_NUMBER && IsZero(((Lexem*)node->right->data)->value.num_value))
                 {
                     SubTreeDtor(&(node->right));
                     *node = *node->left;
@@ -86,24 +86,24 @@ static bool DeleteNeutralElements(Node* node)
             case OPERATION_MUL:
             {
 
-                if ((((NodeData*)node->left->data)->type == TYPE_NUMBER && IsZero(((NodeData*)node->left->data)->value.num_value)) ||
-                    (((NodeData*)node->right->data)->type == TYPE_NUMBER && IsZero(((NodeData*)node->right->data)->value.num_value)))
+                if ((((Lexem*)node->left->data)->type == TYPE_NUMBER && IsZero(((Lexem*)node->left->data)->value.num_value)) ||
+                    (((Lexem*)node->right->data)->type == TYPE_NUMBER && IsZero(((Lexem*)node->right->data)->value.num_value)))
                 {
                     SubTreeDtor(&(node->left));
                     SubTreeDtor(&(node->right));
-                    ((NodeData*)node->data)->type  = TYPE_NUMBER;
-                    ((NodeData*)node->data)->value.num_value = 0.0;
+                    ((Lexem*)node->data)->type  = TYPE_NUMBER;
+                    ((Lexem*)node->data)->value.num_value = 0.0;
 
                     return true;
                 }
 
-                if (((NodeData*)node->left->data)->type == TYPE_NUMBER && IsOne(((NodeData*)node->left->data)->value.num_value))
+                if (((Lexem*)node->left->data)->type == TYPE_NUMBER && IsOne(((Lexem*)node->left->data)->value.num_value))
                 {
                     SubTreeDtor(&(node->left));
                     *node = *node->right;
                     return true;
                 }
-                else if (((NodeData*)node->right->data)->type == TYPE_NUMBER && IsOne(((NodeData*)node->right->data)->value.num_value))
+                else if (((Lexem*)node->right->data)->type == TYPE_NUMBER && IsOne(((Lexem*)node->right->data)->value.num_value))
                 {
                     SubTreeDtor(&(node->right));
                     *node = *node->left;
@@ -115,7 +115,7 @@ static bool DeleteNeutralElements(Node* node)
 
             case OPERATION_MINUS:
             {
-                if (((NodeData*)node->right->data)->type == TYPE_NUMBER && IsZero(((NodeData*)node->right->data)->value.num_value))
+                if (((Lexem*)node->right->data)->type == TYPE_NUMBER && IsZero(((Lexem*)node->right->data)->value.num_value))
                 {
                     SubTreeDtor(&(node->right));
                     *node = *node->left;
@@ -127,19 +127,19 @@ static bool DeleteNeutralElements(Node* node)
 
             case OPERATION_DIV:
             {
-                if (((NodeData*)node->right->data)->type == TYPE_NUMBER && IsOne(((NodeData*)node->right->data)->value.num_value))
+                if (((Lexem*)node->right->data)->type == TYPE_NUMBER && IsOne(((Lexem*)node->right->data)->value.num_value))
                 {
                     SubTreeDtor(&(node->right));
                     *node = *node->left;
                     return true;
                 }
 
-                if (((NodeData*)node->left->data)->type == TYPE_NUMBER && IsZero(((NodeData*)node->left->data)->value.num_value))
+                if (((Lexem*)node->left->data)->type == TYPE_NUMBER && IsZero(((Lexem*)node->left->data)->value.num_value))
                 {
                     SubTreeDtor(&(node->left));
                     SubTreeDtor(&(node->right));
-                    ((NodeData*)node->data)->type  = TYPE_NUMBER;
-                    ((NodeData*)node->data)->value.num_value = 0.0;
+                    ((Lexem*)node->data)->type  = TYPE_NUMBER;
+                    ((Lexem*)node->data)->value.num_value = 0.0;
 
                     return true;
                 }
@@ -149,36 +149,36 @@ static bool DeleteNeutralElements(Node* node)
 
             case OPERATION_POW:
             {
-                if (((NodeData*)node->right->data)->type == TYPE_NUMBER && IsOne(((NodeData*)node->right->data)->value.num_value))
+                if (((Lexem*)node->right->data)->type == TYPE_NUMBER && IsOne(((Lexem*)node->right->data)->value.num_value))
                 {
                     SubTreeDtor(&(node->right));
                     *node = *node->left;
 
                     return true;
                 }
-                else if (((NodeData*)node->right->data)->type == TYPE_NUMBER && IsZero(((NodeData*)node->right->data)->value.num_value))
+                else if (((Lexem*)node->right->data)->type == TYPE_NUMBER && IsZero(((Lexem*)node->right->data)->value.num_value))
                 {
                     SubTreeDtor(&(node->left));
                     SubTreeDtor(&(node->right));
-                    ((NodeData*)node->data)->type            = TYPE_NUMBER;
-                    ((NodeData*)node->data)->value.num_value = 1.0;
+                    ((Lexem*)node->data)->type            = TYPE_NUMBER;
+                    ((Lexem*)node->data)->value.num_value = 1.0;
 
                     return true;
                 }
 
-                if (((NodeData*)node->left->data)->type == TYPE_NUMBER && IsOne(((NodeData*)node->left->data)->value.num_value))
+                if (((Lexem*)node->left->data)->type == TYPE_NUMBER && IsOne(((Lexem*)node->left->data)->value.num_value))
                 {
                     SubTreeDtor(&(node->right));
                     *node = *node->left;
 
                     return true;
                 }
-                else if (((NodeData*)node->left->data)->type == TYPE_NUMBER && IsZero(((NodeData*)node->left->data)->value.num_value))
+                else if (((Lexem*)node->left->data)->type == TYPE_NUMBER && IsZero(((Lexem*)node->left->data)->value.num_value))
                 {
                     SubTreeDtor(&(node->left));
                     SubTreeDtor(&(node->right));
-                    ((NodeData*)node->data)->type            = TYPE_NUMBER;
-                    ((NodeData*)node->data)->value.num_value = 0.0;
+                    ((Lexem*)node->data)->type            = TYPE_NUMBER;
+                    ((Lexem*)node->data)->value.num_value = 0.0;
 
                     return true;
                 }

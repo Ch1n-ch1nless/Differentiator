@@ -3,8 +3,8 @@
 #define ARRAY differentiator->name_table.array
 #define SIZE  differentiator->name_table.size
 #define TREE  differentiator->tree
-#define VALUE ((NodeData*)node->data)->value
-#define TYPE  ((NodeData*)node->data)->type
+#define VALUE ((Lexem*)node->data)->value
+#define TYPE  ((Lexem*)node->data)->type
 #define LEFT  node->left
 #define RIGHT node->right
 
@@ -251,6 +251,8 @@ void MakeGraphic(FILE* pdf_file, Differentiator* differentiator)
     PTR_ASSERT(pdf_file)
     PTR_ASSERT(differentiator)
 
+    static int number_of_graphics = 0;
+
     FILE* gnu_script = fopen("gnu_script.gpl", "w");
     fprintf(gnu_script, "#! /usr/bin/gnuplot -persist\n"
                         "set xlabel \"X\"\n" 
@@ -260,8 +262,9 @@ void MakeGraphic(FILE* pdf_file, Differentiator* differentiator)
                         "set xrange [-10.1:10.1]\n"
                         "set title \"Graph of function\" font \"Helvetica Bold, 20\"\n"
                         "set terminal png size 800, 600\n"
-                        "set output \"Images/graphic.png\"\n"  
-                        "plot "                                                         );
+                        "set output \"Images/graphic%d.png\"\n"  
+                        "plot ",
+                        number_of_graphics                                                );
 
     PrintEquationToPlot(gnu_script, differentiator, differentiator->tree.root);
 
@@ -274,7 +277,8 @@ void MakeGraphic(FILE* pdf_file, Differentiator* differentiator)
 
     fprintf(pdf_file,   "\\begin{figure}\n"
                         "\t\\centering\n"
-                        "\t\\includegraphics[width=0.5\\linewidth]{Images/graphic.png}\n"
+                        "\t\\includegraphics[width=0.5\\linewidth]{Images/graphic%d.png}\n"
                         "\t\\caption{\\label{fig:func}Graph of function.}\n"
-                        "\\end{figure}\n"                                                );
+                        "\\end{figure}\n",
+                        number_of_graphics                                                  );
 }

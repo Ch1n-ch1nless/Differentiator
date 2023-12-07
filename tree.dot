@@ -1,0 +1,35 @@
+digraph G
+{
+	graph [dpi = 100];
+
+	rankdir = TB;
+
+	edge[minlen = 3, arrowsize = 2, penwidth = 1.5];
+	node[shape = Mrecord, style = "rounded, filled", fillcolor = "yellow", fontsize = 20, penwidth = 3];
+
+node_0x555d2740adc0[label = "{+ | OPER | {<left> left | <right> right}}", fillcolor = "red"];
+node_0x555d2740ac40[label = "{^ | OPER | {<left> left | <right> right}}", fillcolor = "red"];
+node_0x555d2740abc0[label = "{cos | OPER | {<left> left | <right> right}}", fillcolor = "red"];
+node_0x555d2740ab80[label = "{^ | OPER | {<left> left | <right> right}}", fillcolor = "red"];
+node_0x555d2740ab00[label = "{15 | NUM | {<left> left | <right> right}}", fillcolor = "blue"];
+node_0x555d2740ab40[label = "{x | VAR | {<left> left | <right> right}}", fillcolor = "green"];
+node_0x555d2740ac00[label = "{2 | NUM | {<left> left | <right> right}}", fillcolor = "blue"];
+node_0x555d2740ad80[label = "{^ | OPER | {<left> left | <right> right}}", fillcolor = "red"];
+node_0x555d2740ad00[label = "{sin | OPER | {<left> left | <right> right}}", fillcolor = "red"];
+node_0x555d2740acc0[label = "{ln | OPER | {<left> left | <right> right}}", fillcolor = "red"];
+node_0x555d2740ac80[label = "{x | VAR | {<left> left | <right> right}}", fillcolor = "green"];
+node_0x555d2740ad40[label = "{3 | NUM | {<left> left | <right> right}}", fillcolor = "blue"];
+
+node_0x555d2740adc0:<left> -> node_0x555d2740ac40;
+node_0x555d2740ac40:<left> -> node_0x555d2740abc0;
+node_0x555d2740abc0:<left> -> node_0x555d2740ab80;
+node_0x555d2740ab80:<left> -> node_0x555d2740ab00;
+node_0x555d2740ab80:<right> -> node_0x555d2740ab40;
+node_0x555d2740ac40:<right> -> node_0x555d2740ac00;
+node_0x555d2740adc0:<right> -> node_0x555d2740ad80;
+node_0x555d2740ad80:<left> -> node_0x555d2740ad00;
+node_0x555d2740ad00:<left> -> node_0x555d2740acc0;
+node_0x555d2740acc0:<left> -> node_0x555d2740ac80;
+node_0x555d2740ad80:<right> -> node_0x555d2740ad40;
+
+}
