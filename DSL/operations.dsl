@@ -12,10 +12,14 @@ DEF_OPER(2,  MUL,   "*",    2,  {
                                     ADD(MUL(dL, cR), MUL(cL, dR))
                                 })
 DEF_OPER(3,  DIV,   "/",    2,  {
-                                    DIV(SUB(MUL(dL, cR), MUL(cL, dR)), POW(cR, NUM(2)))
+                                    DIV(SUB(MUL(cR, dL), MUL(cL, dR)), POW(cR, NUM(2)))
                                 })
 DEF_OPER(4,  POW,   "^",    3,  {
-                                    MUL(POW(cL, cR), ADD(MUL(dR, LN(cL)), DIV(MUL(cR, dL), cL)))
+                                    (isVariable(R)) 
+                                    ? 
+                                    (MUL(POW(cL, cR), ADD(MUL(dR, LN(cL)), DIV(MUL(cR, dL), cL))))
+                                    :
+                                    (MUL(dL, MUL(cR, POW(cL, SUB(cR, NUM(1))))))
                                 })
 DEF_OPER(5,  SIN,   "sin",  5,  {
                                     MUL(dL, COS(cL))

@@ -39,9 +39,9 @@ static void PrintEquationToPlot(FILE* gp, Differentiator* differentiator, Node* 
                 {
                     if (node_priority > GetPriority(LEFT))
                     {
-                        fprintf(gp, "\\left(");
+                        fprintf(gp, "(");
                         PrintEquationToPlot(gp, differentiator, LEFT);
-                        fprintf(gp, "\\right)");
+                        fprintf(gp, ")");
                     } 
                     else
                     {
@@ -52,9 +52,9 @@ static void PrintEquationToPlot(FILE* gp, Differentiator* differentiator, Node* 
 
                     if (node_priority > GetPriority(RIGHT))
                     {
-                        fprintf(gp, "\\left(");
+                        fprintf(gp, "(");
                         PrintEquationToPlot(gp, differentiator, RIGHT);
-                        fprintf(gp, "\\right)");
+                        fprintf(gp, ")");
                     } 
                     else
                     {
@@ -67,9 +67,9 @@ static void PrintEquationToPlot(FILE* gp, Differentiator* differentiator, Node* 
                 {
                     if (node_priority > GetPriority(LEFT))
                     {
-                        fprintf(gp, "\\left(");
+                        fprintf(gp, "(");
                         PrintEquationToPlot(gp, differentiator, LEFT);
-                        fprintf(gp, "\\right)");
+                        fprintf(gp, ")");
                     } 
                     else
                     {
@@ -80,9 +80,9 @@ static void PrintEquationToPlot(FILE* gp, Differentiator* differentiator, Node* 
 
                     if (node_priority > GetPriority(RIGHT))
                     {
-                        fprintf(gp, "\\left(");
+                        fprintf(gp, "(");
                         PrintEquationToPlot(gp, differentiator, RIGHT);
-                        fprintf(gp, "\\right)");
+                        fprintf(gp, ")");
                     } 
                     else
                     {
@@ -95,9 +95,9 @@ static void PrintEquationToPlot(FILE* gp, Differentiator* differentiator, Node* 
                 {
                     if (node_priority > GetPriority(LEFT))
                     {
-                        fprintf(gp, "\\left(");
+                        fprintf(gp, "(");
                         PrintEquationToPlot(gp, differentiator, LEFT);
-                        fprintf(gp, "\\right)");
+                        fprintf(gp, ")");
                     } 
                     else
                     {
@@ -108,9 +108,9 @@ static void PrintEquationToPlot(FILE* gp, Differentiator* differentiator, Node* 
 
                     if (node_priority > GetPriority(RIGHT))
                     {
-                        fprintf(gp, "\\left(");
+                        fprintf(gp, "(");
                         PrintEquationToPlot(gp, differentiator, RIGHT);
-                        fprintf(gp, "\\right)");
+                        fprintf(gp, ")");
                     } 
                     else
                     {
@@ -123,9 +123,9 @@ static void PrintEquationToPlot(FILE* gp, Differentiator* differentiator, Node* 
                 {
                     if (node_priority > GetPriority(LEFT))
                     {
-                        fprintf(gp, "\\left(");
+                        fprintf(gp, "(");
                         PrintEquationToPlot(gp, differentiator, LEFT);
-                        fprintf(gp, "\\right)");
+                        fprintf(gp, ")");
                     } 
                     else
                     {
@@ -136,9 +136,9 @@ static void PrintEquationToPlot(FILE* gp, Differentiator* differentiator, Node* 
 
                     if (node_priority > GetPriority(RIGHT))
                     {
-                        fprintf(gp, "\\left(");
+                        fprintf(gp, "(");
                         PrintEquationToPlot(gp, differentiator, RIGHT);
-                        fprintf(gp, "\\right)");
+                        fprintf(gp, ")");
                     } 
                     else
                     {
@@ -151,9 +151,9 @@ static void PrintEquationToPlot(FILE* gp, Differentiator* differentiator, Node* 
                 {
                     if (node_priority > GetPriority(LEFT))
                     {
-                        fprintf(gp, "\\left(");
+                        fprintf(gp, "(");
                         PrintEquationToPlot(gp, differentiator, LEFT);
-                        fprintf(gp, "\\right)");
+                        fprintf(gp, ")");
                     } 
                     else
                     {
@@ -164,9 +164,9 @@ static void PrintEquationToPlot(FILE* gp, Differentiator* differentiator, Node* 
 
                     if (node_priority > GetPriority(RIGHT))
                     {
-                        fprintf(gp, "\\left(");
+                        fprintf(gp, "(");
                         PrintEquationToPlot(gp, differentiator, RIGHT);
-                        fprintf(gp, "\\right)");
+                        fprintf(gp, ")");
                     } 
                     else
                     {
@@ -211,9 +211,9 @@ static void PrintEquationToPlot(FILE* gp, Differentiator* differentiator, Node* 
                 {
                     if (node_priority > GetPriority(LEFT))
                     {
-                        fprintf(gp, "\\left(");
+                        fprintf(gp, "(");
                         PrintEquationToPlot(gp, differentiator, LEFT);
-                        fprintf(gp, "\\right)");
+                        fprintf(gp, ")");
                     } 
                     else
                     {
@@ -275,10 +275,12 @@ void MakeGraphic(FILE* pdf_file, Differentiator* differentiator)
     system("chmod +x gnu_script.gpl");
     system("./gnu_script.gpl");
 
-    fprintf(pdf_file,   "\\begin{figure}\n"
+    fprintf(pdf_file,   "\\begin{figure}[h]\n"
                         "\t\\centering\n"
-                        "\t\\includegraphics[width=0.5\\linewidth]{Images/graphic%d.png}\n"
+                        "\t\\includegraphics[width=0.8\\linewidth]{Images/graphic%d.png}\n"
                         "\t\\caption{\\label{fig:func}Graph of function.}\n"
                         "\\end{figure}\n",
                         number_of_graphics                                                  );
+
+    number_of_graphics++;
 }

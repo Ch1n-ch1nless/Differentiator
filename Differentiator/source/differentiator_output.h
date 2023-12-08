@@ -12,10 +12,8 @@ const char BEGIN_MSG[] = R"(\documentclass [a4paper, 12x `pt]{article}
 \usepackage [utf8] {inputenc}
 \usepackage [T2A] {fontenc}
 \usepackage [russian] {babel}
-\usepackage {amsmath, amsfonts, amssymb, amsthm, mathtools, textcomp, stmaryrd}
+\usepackage {amsmath, amsfonts, amssymb, amsthm}
 \usepackage{graphicx}
-\usepackage{float}
-\usepackage{wrapfig}
 
 \title{Начало Математического безумия!}
 \author{Александров Олег}

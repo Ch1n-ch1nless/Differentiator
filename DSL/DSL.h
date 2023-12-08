@@ -1,6 +1,9 @@
 #ifndef DSL_H_INCLUDED
 #define DSL_H_INCLUDED
 
+#define R node->right
+#define L node->left
+
 #define NUM(value)                  NewNode(TYPE_NUMBER,    {.num_value  = value}, nullptr, nullptr)
 #define OPER(value, left, right)    NewNode(TYPE_OPERATION, {.oper_index = value}, left,    right )
 
@@ -8,6 +11,8 @@
 #define dR DiffNode(tex_file, differentiator, node->right, index)
 #define cL CopyNode(node->left)  
 #define cR CopyNode(node->right) 
+
+#define isVariable(node) IsVariableInSubTree(node, "x", differentiator)
 
 #define ADD(left, right)    OPER(OPERATION_PLUS,  left, right)
 #define SUB(left, right)    OPER(OPERATION_MINUS, left, right)
