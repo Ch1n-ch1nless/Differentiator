@@ -27,7 +27,14 @@ static void PrintNodeInTeX(FILE* output, Differentiator* differentiator, Node* n
         case TYPE_VARIABLE:
         {
             int index = VALUE.var_index;
-            fprintf(output, "%s", ARRAY[index]);
+            if (node->left != nullptr)
+            {
+                fprintf(output, "%s", REPLACE_ARRAY[index]);
+            }   
+            else
+            {
+                fprintf(output, "%s", ARRAY[index]);
+            }
             break;
         }
 
@@ -214,6 +221,106 @@ static void PrintNodeInTeX(FILE* output, Differentiator* differentiator, Node* n
 
 //=================================================================================================
 
+static int ReplaceLongExpression(Differentiator* differentiator, Node* node, int rep_array_index)
+{
+    PTR_ASSERT(differentiator)
+    
+    if (node == nullptr)
+        return rep_array_index;
+
+    error_t error = NO_ERR;
+
+    rep_array_index = ReplaceLongExpression(differentiator, node->left,  rep_array_index);
+    rep_array_index = ReplaceLongExpression(differentiator, node->right, rep_array_index);
+
+    if (CalculateSizeOfSubtree(node) > MAX_LEN_OF_EXPRESSION) 
+    {
+        if (CalculateSizeOfSubtree(node->left) > CalculateSizeOfSubtree(node->right))
+        {
+            Lexem* new_lexem = (Lexem*) calloc(1, sizeof(Lexem));
+            new_lexem->type             = TYPE_VARIABLE;
+            new_lexem->value.var_index  = rep_array_index;
+            rep_array_index++;
+
+            Node* rep_node = NodeCtor(&error, new_lexem);
+
+            Node* tmp_node = node->left;
+            node->left     = rep_node;
+            rep_node->left = tmp_node;
+        }
+        else
+        {
+            Lexem* new_lexem = (Lexem*) calloc(1, sizeof(Lexem));
+            new_lexem->type             = TYPE_VARIABLE;
+            new_lexem->value.var_index  = rep_array_index;
+            rep_array_index++;
+
+            Node* rep_node = NodeCtor(&error, new_lexem);
+
+            Node* tmp_node = node->right;
+            node->right    = rep_node;
+            rep_node->left = tmp_node;
+        }
+    }
+
+    return rep_array_index;
+}
+
+//=================================================================================================
+
+static Node* FindRepVariableInExpression(Node* node, int index)
+{
+    if (node == nullptr)
+        return nullptr;
+
+    Node* replace_variable = node;
+
+    if (((Lexem*)replace_variable->data)->type == TYPE_VARIABLE)
+    {
+        if (((Lexem*)replace_variable->data)->value.var_index == index)
+        {
+            if (replace_variable->left != nullptr)
+            {
+                return replace_variable;
+            }
+        }
+    }
+
+    replace_variable = FindRepVariableInExpression(node->left, index);
+    if (replace_variable != nullptr)
+        return replace_variable;
+
+    return FindRepVariableInExpression(node->right, index);
+}
+
+//=================================================================================================
+
+void PrintReplacesNodes(FILE* output, Differentiator* differentiator, Node* node)
+{
+    PTR_ASSERT(differentiator)
+    PTR_ASSERT(node)
+
+    int number_of_rep_vars = ReplaceLongExpression(differentiator, node, 0);
+    FILE* html_file  = nullptr;
+
+    if (number_of_rep_vars != 0)
+    {
+        fprintf(output," где значения переменных равны: \\\n");
+
+        Node* rep_node = nullptr;
+
+        for (int i = 0; i < number_of_rep_vars; i++)
+        {
+            rep_node = FindRepVariableInExpression(node, i);
+            fprintf(output, "$$ %s = ", REPLACE_ARRAY[i]);
+            PrintNodeInTeX(output, differentiator, rep_node->left);
+            fprintf(output, " $$\\\n");
+        }
+    }
+}
+
+//=================================================================================================
+
 void DifferentiatorTextDump(FILE* output, Differentiator* differentiator, Node* node, const char* word)
 {
     PTR_ASSERT(output)
@@ -226,7 +333,7 @@ void DifferentiatorTextDump(FILE* output, Differentiator* differentiator, Node* 
 
     PrintNodeInTeX(output, differentiator, node);
 
-    fprintf(output, " $$\\\\\n");
+    fprintf(output, " $$\n");
 }
 
 //=================================================================================================
@@ -247,7 +354,7 @@ void DerivativeTextDump(FILE* output, Differentiator* differentiator, Node* node
 
     PrintNodeInTeX(output, differentiator, diff_node);
 
-    fprintf(output, " $$\\\\\n");
+    fprintf(output, " $$\\\n");
 }
 
 //=================================================================================================
@@ -272,6 +379,8 @@ void PrintExpressionInTeX(FILE* tex_file, Differentiator* differentiator, const 
     PTR_ASSERT(tex_file)
 
     DifferentiatorTextDump(tex_file, differentiator, TREE.root, word);
+
+    PrintReplacesNodes(tex_file, differentiator, differentiator->tree.root);
 }
 
 //=================================================================================================

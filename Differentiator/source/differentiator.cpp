@@ -354,8 +354,6 @@ double DifferentiatorCalculate(Node* node, NameTable* name_table)
     if (node == nullptr)
         return 0;
 
-    printf("TYPE: %d\n", ((Lexem*)node->data)->type);
-
     switch (((Lexem*)node->data)->type)
     {
         case TYPE_NUMBER:
@@ -391,11 +389,9 @@ double DifferentiatorCalculate(Node* node, NameTable* name_table)
                     return pow(left, right);
 
                 case OPERATION_SIN:
-                    printf("SIN: %lg\n", sin(left));
                     return sin(left);
 
                 case OPERATION_COS:
-                    printf("COS: %lg\n", cos(left));
                     return cos(left);
 
                 case OPERATION_TG:
@@ -458,6 +454,56 @@ error_t AddLexemToArray(Differentiator* differentiator, Lexem* new_node_data)
     differentiator->lexem_array.size++;
 
     return error;
+}
+
+//=================================================================================================
+
+int CalculateSizeOfSubtree(Node* node)
+{
+    if (node == nullptr)
+        return 0;
+    
+    int size_of_subtree = 0;
+
+    switch (((Lexem*)node->data)->type)
+    {
+        case TYPE_NUMBER:
+        {
+            size_of_subtree = 1;
+            break;
+        }
+
+        case TYPE_VARIABLE:
+        {
+            size_of_subtree = 1;
+            break;
+        }
+
+        case TYPE_OPERATION:
+        {
+            #define DEF_OPER(number, name, operator_in_file, priority, size, ...)       \
+                case (OPERATION_##name):                                                \
+                {                                                                       \
+                    size_of_subtree =  size;                                            \
+                    break;                                                              \
+                }
+
+            int oper_index = ((Lexem*)node->data)->value.oper_index;
+
+            switch (oper_index)
+            {
+                #include "../../DSL/operations.dsl"
+            }
+        }
+
+        case TYPE_UNDEFINED:
+        default:
+        {
+            break;
+        }
+    }
+
+    return size_of_subtree;
 }
 
 //=================================================================================================

@@ -30,15 +30,11 @@ void ExpanseInSeriesTheilor(FILE* tex_file, Differentiator differentiator, Diffe
         DifferentiatorSimplify(tex_file, &differentiator);
 
         value = DifferentiatorCalculate(differentiator.tree.root, &(differentiator.name_table));
-        printf("%lg\n", value);
 
-        theilor->tree.root = OPER(OPERATION_PLUS, MUL(DIV(NUM(value), NUM(Factorial(i))), 
-                                                      POW(NewNode(TYPE_VARIABLE, {.var_index = 0}, nullptr, nullptr), NUM(i))), 
-                                                  theilor->tree.root);
+        theilor->tree.root = OPER(OPERATION_PLUS,   theilor->tree.root,
+                                                    MUL(DIV(NUM(value), NUM(Factorial(i))), 
+                                                      POW(NewNode(TYPE_VARIABLE, {.var_index = 0}, nullptr, nullptr), NUM(i))));
 
         DifferentiatorSimplify(tex_file, theilor);
-
-        FILE* html_file = fopen("tree.html", "a");
-        DifferentiatorHtmlDump(html_file, &differentiator, __FILE__, __LINE__, __FUNCTION__);
     }
 }

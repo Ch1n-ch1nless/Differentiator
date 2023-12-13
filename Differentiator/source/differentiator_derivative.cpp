@@ -41,7 +41,7 @@ Node* DiffNode(FILE* tex_file, Differentiator* differentiator, Node* node, const
 {
     Node* new_node = nullptr;
 
-    #define DEF_OPER(number, name, string, priority, diff_action)                       \
+    #define DEF_OPER(number, name, string, priority, size, diff_action)                 \
                 case OPERATION_##name:                                                  \
                 {                                                                       \
                     new_node = diff_action;                                             \

@@ -92,7 +92,12 @@ const char FUNNY_MATH_QUOTES[NUMBER_OF_QUOTES][MAX_SIZE_OF_QUOTE] = {
     {"Получим вот такое выражение! Мы упустили часть доказательств равносильных переходов! Поэтому я хочу, чтобы ВЫ САМИ ИХ ДОКАЗАЛИ!\n"}
 };
 
-const size_t MAX_SIZE_OF_COMMAND = 1 << 10;
+const size_t MAX_SIZE_OF_COMMAND    = 1 << 10;
+const size_t SIZE_OF_REPLACE_ARRAY  = 9;
+
+const char* const REPLACE_ARRAY[SIZE_OF_REPLACE_ARRAY] = {
+    "\\alpha", "\\beta", "\\gamma", "\\varepsilon", "\\eta", "\\theta", "\\varkappa", "\\sigma", "\\omega"
+};
 
 void DifferentiatorTextDump(FILE* output, Differentiator* differentiator, Node* node, const char* word);
 

@@ -6,6 +6,8 @@
 
 #define NUM(value)                  NewNode(TYPE_NUMBER,    {.num_value  = value}, nullptr, nullptr)
 #define OPER(value, left, right)    NewNode(TYPE_OPERATION, {.oper_index = value}, left,    right )
+#define S(node)                     CalculateSizeOfSubtree(node)
+#define M(left, right)              (left > right) ? left : right
 
 #define dL DiffNode(tex_file, differentiator, node->left,  index)
 #define dR DiffNode(tex_file, differentiator, node->right, index)

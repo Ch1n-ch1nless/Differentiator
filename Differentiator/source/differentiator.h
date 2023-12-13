@@ -89,6 +89,7 @@ const OperationInfo OPERATION_TABLE[END_OF_OPERATION_ENUM] =
 const size_t NAME_TABLE_CAPACITY_INIT  = 16;
 const size_t LEXEM_ARRAY_CAPACITY_INIT = 16;
 const int    VARIABLE_WAS_NOT_FOUND    = -1;
+const int    MAX_LEN_OF_EXPRESSION     = 1 << 12;
 
 const double EPS = 1e-6;
 
@@ -112,5 +113,7 @@ int     GetPriority(Node* node);
 Node*   GetNodeFromStack(Stack* stk, Tree* tree, error_t* error);
 
 double  DifferentiatorCalculate(Node* node, NameTable* name_table);
+
+int     CalculateSizeOfSubtree(Node* node);
 
 #endif //DIFFERENTIATOR_H_INCLUDED
