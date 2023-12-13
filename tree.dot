@@ -1,0 +1,19 @@
+digraph G
+{
+	graph [dpi = 100];
+
+	rankdir = TB;
+
+	edge[minlen = 3, arrowsize = 2, penwidth = 1.5];
+	node[shape = Mrecord, style = "rounded, filled", fillcolor = "yellow", fontsize = 20, penwidth = 3];
+
+node_0x5635e0576dc0[label = "{* | OPER | {<left> left | <right> right}}", fillcolor = "red"];
+node_0x5635e0575a10[label = "{-1 | NUM | {<left> left | <right> right}}", fillcolor = "blue"];
+node_0x5635e05759d0[label = "{cos | OPER | {<left> left | <right> right}}", fillcolor = "red"];
+node_0x5635e0575950[label = "{x | VAR | {<left> left | <right> right}}", fillcolor = "green"];
+
+node_0x5635e0576dc0:<left> -> node_0x5635e0575a10;
+node_0x5635e0576dc0:<right> -> node_0x5635e05759d0;
+node_0x5635e05759d0:<left> -> node_0x5635e0575950;
+
+}

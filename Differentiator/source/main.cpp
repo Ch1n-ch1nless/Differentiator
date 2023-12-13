@@ -3,6 +3,7 @@
 #include "differentiator_output.h"
 #include "differentiator_derivative.h"
 #include "differentiator_gnuplot.h"
+#include "theilor_series.h"
 
 #include "recursive_descent.h"
 
@@ -53,9 +54,24 @@ int main()
     /*Draw Graphic of derivavtive*/
     MakeGraphic(tex_file, &derivative);
 
+    /*Theilor series*/
+    Differentiator theilor_series = {};
+    error = DifferentiatorCtor(&theilor_series);
+
+    ExpanseInSeriesTheilor(tex_file, differentiator, &theilor_series, 4);
+    PrintExpressionInTeX(tex_file, &theilor_series, "Разложение в ряд Тейлора g(x) = ");
+
+    /*Draw Graphic of theilor series*/
+    MakeGraphic(tex_file, &theilor_series);
+
+    PrintExpressionInTeX(tex_file, &differentiator, "Исходная функция: ");
+    PrintExpressionInTeX(tex_file, &derivative,     "Производная выражения: ");
+    PrintExpressionInTeX(tex_file, &theilor_series, "Разложение в ряд Тейлора g(x) = ");
+
     /*Delete structs*/
     DifferentiatorDtor(&differentiator);
     DifferentiatorDtor(&derivative);
+    DifferentiatorDtor(&theilor_series);
 
     /*Print end of file and close the tex_file*/
     ShowOutro(tex_file);

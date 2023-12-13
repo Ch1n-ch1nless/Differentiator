@@ -15,15 +15,58 @@ const char BEGIN_MSG[] = R"(\documentclass [a4paper, 12x `pt]{article}
 \usepackage {amsmath, amsfonts, amssymb, amsthm}
 \usepackage{graphicx}
 
-\title{Начало Математического безумия!}
 \author{Александров Олег}
 
 \begin{document}
-\maketitle
+
+\begin{titlepage}
+   \begin{center}
+        \hfill \break
+        \footnotesize{ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ}\\ 
+        \footnotesize{ВЫСШЕГО ПРОФЕССИОНАЛЬНОГО ОБРАЗОВАНИЯ}\\
+        \small{\textbf{«МОСКОВСКИЙ ФИЗКУЛЬТУРНЫЙ ТЕХНИКУМ С УГЛУБЛЕННЫМ ИЗУЧЕНИЕМ ИННОСТРАННЫХ ЯЗЫКОВ»} }\\
+        \hfill \break
+        \hfill \break
+        \hfill \break
+        \normalsize{«Физкек-школа прикольных мемов и инфоцыганства»}\\
+        \hfill \break
+        \hfill \break
+        \hfill \break
+        \normalsize{Кафедра? Я её не выбрал ещё...}\\
+        \hfill\break
+        \hfill \break
+        \hfill \break
+        \hfill \break
+        \LARGE{«Начало математического безумия!!!»}\\
+        \hfill \break
+        \hfill \break
+        \hfill \break
+        \hfill \break
+        \hfill \break
+        \hfill \break
+        \hfill \break
+        \hfill \break
+        \hfill \break
+        \hfill \break
+        \begin{center}
+            \normalsize{Работу выполнил}
+        \end{center}
+        \begin{center}
+            \normalsize{Александров Олег Алексеевич}
+        \end{center}
+        \hfill \break
+        \normalsize{Долгопрудный 2023} 
+    \end{center}
+    \thispagestyle{empty}
+\end{titlepage}
 
 )";
 
 const char FINAL_MSG[] = R"(
+\addcontentsline{toc}{chapter}{bibname}
+\bibliographystyle{utf8gost705u}
+\bibliography{biblio}
+
 \end{document}
 )";
 

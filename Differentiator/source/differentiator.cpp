@@ -354,6 +354,8 @@ double DifferentiatorCalculate(Node* node, NameTable* name_table)
     if (node == nullptr)
         return 0;
 
+    printf("TYPE: %d\n", ((Lexem*)node->data)->type);
+
     switch (((Lexem*)node->data)->type)
     {
         case TYPE_NUMBER:
@@ -389,9 +391,11 @@ double DifferentiatorCalculate(Node* node, NameTable* name_table)
                     return pow(left, right);
 
                 case OPERATION_SIN:
+                    printf("SIN: %lg\n", sin(left));
                     return sin(left);
 
                 case OPERATION_COS:
+                    printf("COS: %lg\n", cos(left));
                     return cos(left);
 
                 case OPERATION_TG:
@@ -419,7 +423,8 @@ double DifferentiatorCalculate(Node* node, NameTable* name_table)
         case TYPE_VARIABLE:
         {
             size_t index = ((Lexem*)node->data)->value.var_index;
-            return name_table->array[index].value;
+            //return name_table->array[index].value;
+            return 0;
         }
         case TYPE_UNDEFINED:
         default:

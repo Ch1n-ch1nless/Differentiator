@@ -278,7 +278,7 @@ void MakeGraphic(FILE* pdf_file, Differentiator* differentiator)
     fprintf(pdf_file,   "\\begin{figure}[h]\n"
                         "\t\\centering\n"
                         "\t\\includegraphics[width=0.8\\linewidth]{Images/graphic%d.png}\n"
-                        "\t\\caption{\\label{fig:func}Graph of function.}\n"
+                        "\t\\caption{\\label xGraph of function.}\n"
                         "\\end{figure}\n",
                         number_of_graphics                                                  );
 

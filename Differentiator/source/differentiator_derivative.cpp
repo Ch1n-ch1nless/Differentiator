@@ -85,7 +85,7 @@ Node* DiffNode(FILE* tex_file, Differentiator* differentiator, Node* node, const
 
 //=================================================================================================
 
-static void CopyVariables(NameTable* new_name_table, NameTable* name_table)
+void CopyVariables(NameTable* new_name_table, NameTable* name_table)
 {
     PTR_ASSERT(new_name_table)
     PTR_ASSERT(name_table)

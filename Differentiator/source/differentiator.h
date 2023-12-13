@@ -38,7 +38,7 @@ struct OperationInfo
 union Value
 {
     double num_value;
-    int    oper_index;
+    int    oper_index; //Operations 
     int    var_index;
 };
 
@@ -51,7 +51,7 @@ struct Lexem
 struct Variable
 {
     const char* name  = nullptr;
-    double      value = NAN;
+    double      value = 0;
 };
 
 struct LexemArray

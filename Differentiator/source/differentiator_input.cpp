@@ -297,6 +297,7 @@ static error_t CreateToken(Differentiator* const differentiator, char** const pt
 
     int index = 0;
 
+          //V------------------------------------------------------CHANGE on other function!!!  
     while (isalnum(**ptr_to_lexem) && index < MAX_LEN_OF_WORD)
     {
         name_of_arg[index] = **ptr_to_lexem;
@@ -331,7 +332,7 @@ error_t TokenizeBuffer(Differentiator* const differentiator)
             case '\t':
             case '\r':
             {
-                *ptr_to_lexem = '\0';
+                *ptr_to_lexem = '\0'; //Delete
                 ptr_to_lexem++;
                 SkipWhiteSpaces(&(ptr_to_lexem));
                 break;
