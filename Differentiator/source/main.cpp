@@ -62,7 +62,7 @@ int main()
     PrintExpressionInTeX(tex_file, &theilor_series, "Разложение в ряд Тейлора g(x) = ");
 
     /*Draw Graphic of theilor series*/
-    MakeGraphic(tex_file, &theilor_series);
+    MakeGraphicWithTheilorSeries(tex_file, &differentiator, &theilor_series);
 
     PrintExpressionInTeX(tex_file, &differentiator, "Исходная функция: ");
     PrintExpressionInTeX(tex_file, &derivative,     "Производная выражения: ");

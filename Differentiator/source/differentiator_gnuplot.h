@@ -6,5 +6,6 @@
 #include <unistd.h>
 
 void MakeGraphic(FILE* pdf_file, Differentiator* differentiator);
+void MakeGraphicWithTheilorSeries(FILE* pdf_file, Differentiator* differentiator, Differentiator* theilor);
 
 #endif //DIFERENTIATOR_GNUPLOT_H_INCLUDED

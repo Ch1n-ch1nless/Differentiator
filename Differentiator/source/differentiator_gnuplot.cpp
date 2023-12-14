@@ -284,3 +284,50 @@ void MakeGraphic(FILE* pdf_file, Differentiator* differentiator)
 
     number_of_graphics++;
 }
+
+void MakeGraphicWithTheilorSeries(FILE* pdf_file, Differentiator* differentiator, Differentiator* theilor)
+{
+    PTR_ASSERT(pdf_file)
+    PTR_ASSERT(differentiator)
+    PTR_ASSERT(theilor)
+
+    static int number_of_graphics = 0;
+
+    FILE* gnu_script = fopen("gnu_script.gpl", "w");
+    fprintf(gnu_script, "#! /usr/bin/gnuplot -persist\n"
+                        "set xlabel \"X\"\n" 
+                        "set ylabel \"Y\"\n"
+                        "set grid\n"
+                        "set yrange [-10.1:10.1]\n"
+                        "set xrange [-10.1:10.1]\n"
+                        "set title \"Graph of function\" font \"Helvetica Bold, 20\"\n"
+                        "set terminal png size 800, 600\n"
+                        "set output \"Images/graphic%d.png\"\n"  
+                        "set multiplot\n"
+                        "plot ",
+                        number_of_graphics                                                );
+
+    PrintEquationToPlot(gnu_script, differentiator, differentiator->tree.root);
+
+    fprintf(gnu_script, " title \"f(x)\"  lc rgb \"red\"\n");
+
+    fprintf(gnu_script, "plot ");
+
+    PrintEquationToPlot(gnu_script, theilor, theilor->tree.root);
+
+    fprintf(gnu_script, " title \"g(x)\"  lc rgb \"blue\"\n");
+
+    fclose(gnu_script);
+
+    system("chmod +x gnu_script.gpl");
+    system("./gnu_script.gpl");
+
+    fprintf(pdf_file,   "\\begin{figure}[h]\n"
+                        "\t\\centering\n"
+                        "\t\\includegraphics[width=0.8\\linewidth]{Images/graphic%d.png}\n"
+                        "\t\\caption{\\label xGraph of function.}\n"
+                        "\\end{figure}\n",
+                        number_of_graphics                                                  );
+
+    number_of_graphics++;
+}
